@@ -42,6 +42,11 @@ module.exports = {
     // Cảnh báo khi thẻ <a target='_blank'> mà không có rel="noreferrer"
     "react/jsx-no-target-blank": "warn",
     // Tăng cường một số rule prettier (copy từ file .prettierrc qua)
+    "react/react-in-jsx-scope": 0,
+    "react/prop-types": ["off"],
+    "react/jsx-props-no-spreading": ["off"],
+    "react/require-default-props": ["off"],
+    "no-param-reassign": ["off"],
     "prettier/prettier": [
       "warn",
       {
