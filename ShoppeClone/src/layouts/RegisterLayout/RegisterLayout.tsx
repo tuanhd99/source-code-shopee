@@ -1,4 +1,6 @@
 import React from 'react';
+import RegisterHeader from './RegisterHeader';
+import Footer from '../Footer';
 
 interface IProps {
   children?: React.ReactNode;
@@ -6,8 +8,9 @@ interface IProps {
 function RegisterLayout({ children }: IProps) {
   return (
     <>
-      <div>RegisterLayout</div>
+      <RegisterHeader />
       {children}
+      <Footer />
     </>
   );
 }

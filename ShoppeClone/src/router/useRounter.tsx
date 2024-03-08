@@ -3,7 +3,7 @@ import { RouterPath } from './util';
 import Products from 'src/pages/Products';
 import Login from 'src/pages/Login';
 import Register from 'src/pages/Register';
-import RegisterLayout from 'src/layouts/RegisterLayout';
+import RegisterLayout from 'src/layouts/RegisterLayout/RegisterLayout';
 
 export default function useRounterElement() {
   const routerElement = useRoutes([
