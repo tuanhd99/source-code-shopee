@@ -10,7 +10,7 @@ function Login() {
       <div className='max-w-7xl mx-auto px-4'>
         <div className='grid grid-cols-1 lg:grid-cols-5 py-12 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-3 mx-auto flex items-center flex-col '>
-            <img src={Image.LogoShopee} alt='img' />
+            <img className='h-[8rem] lg:h-[20rem] sm:h-[15rem]' src={Image.LogoShopee} alt='img' />
             <div className='text-center mt-10 text-2xl text-white'>
               Nền tảng thương mại điện tử yêu thích ở Đông Nam Á.
             </div>

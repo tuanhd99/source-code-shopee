@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: "dev.shopee.com",
-    port: 8000
+    port: 10000
   },
   css: {
     devSourcemap: true

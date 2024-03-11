@@ -1,4 +1,4 @@
-import LogoShopee from "./shopee.png";
+import LogoShopee from "./logo-shopee.png";
 
 export interface IImage {
   LogoShopee: string;
