@@ -4,7 +4,6 @@ module.exports = {
   root: true,
   env: { browser: true, es2020: true },
   extends: [
-    // Chúng ta sẽ dùng các rule mặc định từ các plugin mà chúng ta đã cài.
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
@@ -31,6 +30,7 @@ module.exports = {
         paths: [path.resolve(__dirname, "")],
         extensions: [".js", ".jsx", ".ts", ".tsx"],
       },
+
     },
   },
   env: {
@@ -56,7 +56,7 @@ module.exports = {
         tabWidth: 2,
         endOfLine: "auto",
         useTabs: false,
-        singleQuote: true,
+        singleQuote: false,
         printWidth: 120,
         jsxSingleQuote: true,
       },

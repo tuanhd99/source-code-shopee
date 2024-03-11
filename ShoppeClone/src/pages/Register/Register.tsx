@@ -1,11 +1,20 @@
-import { Link } from 'react-router-dom';
-import { RouterPath } from 'src/router/util';
+// eslint-disable-next-line import/no-unresolved
+
+import { Link } from "react-router-dom";
+import Image from "src/assets/Image";
+import { RouterPath } from "src/router/util";
 
 function Register() {
   return (
     <div className='bg-orange'>
       <div className='max-w-7xl mx-auto px-4'>
         <div className='grid grid-cols-1 lg:grid-cols-5 py-12 lg:py-32 lg:pr-10'>
+          <div className='lg:col-span-3 mx-auto flex items-center flex-col '>
+            <img src={Image.LogoShopee} alt='img' />
+            <div className='text-center mt-10 text-2xl text-white'>
+              Nền tảng thương mại điện tử yêu thích ở Đông Nam Á.
+            </div>
+          </div>
           <div className='lg:col-span-2 lg:col-start-4'>
             <form className='p-10 rounded bg-white shadow-sm'>
               <div className='text-2xl'>Đăng Kí</div>
@@ -43,7 +52,7 @@ function Register() {
               </div>
               <div className='mt-8 text-center'>
                 <div className='flex items-center justify-center mt-8'>
-                  <span className='text-slate-400'>Bạn đã có tài khoản?</span>
+                  <span className='text-slate-400 opacity-2'>Bạn đã có tài khoản?</span>
                   <Link to={RouterPath.Login} className='text-red-400 ml-1'>
                     Đăng nhập
                   </Link>

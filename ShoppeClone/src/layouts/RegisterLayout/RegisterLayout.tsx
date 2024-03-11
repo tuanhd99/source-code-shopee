@@ -1,6 +1,6 @@
-import React from 'react';
-import RegisterHeader from './RegisterHeader';
-import Footer from '../Footer';
+import React from "react";
+import RegisterHeader from "./RegisterHeader";
+import Footer from "../Footer";
 
 interface IProps {
   children?: React.ReactNode;
