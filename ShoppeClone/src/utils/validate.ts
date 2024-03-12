@@ -1,9 +1,9 @@
-import type { RegisterOptions } from "react-hook-form";
+import type { RegisterOptions, UseFormGetValues } from "react-hook-form";
 type Rules = {
   [key: string]: RegisterOptions;
 };
 
-export const validateLoginOrRegister: Rules = {
+export const validateLoginOrRegister = (getValuesInput: UseFormGetValues<any>): Rules => ({
   email: {
     required: {
       value: true,
@@ -34,6 +34,10 @@ export const validateLoginOrRegister: Rules = {
     pattern: {
       value: /^[a-zA-Z0-9!@#$%^&*]{6,160}$/,
       message: "Please key in a valid confirm password"
-    }
+    },
+    validate:
+      typeof getValuesInput === "function"
+        ? (value) => value === getValuesInput("password") || "Confirm Email does not match."
+        : undefined
   }
-};
+});
