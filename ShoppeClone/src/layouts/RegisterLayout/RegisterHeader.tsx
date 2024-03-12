@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 
 function RegisterHeader() {
   return (
-    <header className='py-5 '>
-      <div className='max-w-7xl mx-auto px-4'>
+    <header className='py-3 '>
+      <div className='max-w-7xl mx-auto px-4 flex items-end justify-between'>
         <nav className='flex items-end'>
           <Link to='/'>
             <svg viewBox='0 0 192 65' className='h-8 lg:h-11 fill-orange'>
@@ -14,6 +14,7 @@ function RegisterHeader() {
           </Link>
           <div className='ml-5 text-xl lg:text-2xl'>Đăng kí</div>
         </nav>
+        <div className='text-[14px] text-orange'>Bạn cần giúp đỡ?</div>
       </div>
     </header>
   );
