@@ -1,18 +1,15 @@
 // eslint-disable-next-line import/no-unresolved
 
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import Image from "src/assets/Image";
 import { RouterPath } from "src/router/util";
 import { NameField } from "src/utils/enum";
-import { validateLoginOrRegister } from "src/utils/validate";
+import { Schema, schema } from "src/utils/validate";
 
-interface IFormInputs {
-  email: string;
-  password: string;
-  confirm_password: string;
-}
+type IFormInputs = Schema;
 function Register() {
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState<boolean>(false);
@@ -21,11 +18,11 @@ function Register() {
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
     watch
-  } = useForm<IFormInputs>();
+  } = useForm<IFormInputs>({
+    resolver: yupResolver(schema)
+  });
 
-  const rule = validateLoginOrRegister(getValues);
   const onSubmit = handleSubmit((data) => {
     console.log(data);
   });
@@ -138,7 +135,7 @@ function Register() {
                   type='email'
                   className='p-3 w-full outline-none border border-gray-300 focus:border-gray-700 rounded-sm focus:shadow-sm'
                   placeholder='Email'
-                  {...register("email", rule.email)}
+                  {...register(NameField.Email)}
                 />
                 <div className='mt-1 text-red-600 min-h-[1.25rem] text-sm'>{errors.email?.message}</div>
               </div>
@@ -148,7 +145,7 @@ function Register() {
                   autoComplete='on'
                   className='p-3 w-full outline-none border border-gray-300 focus:border-gray-700 rounded-sm focus:shadow-sm'
                   placeholder='Password'
-                  {...register(NameField.Password, rule.password)}
+                  {...register(NameField.Password)}
                 />
                 {renderShowHideButton(NameField.Password)}
 
@@ -160,7 +157,7 @@ function Register() {
                   autoComplete='on'
                   className='p-3 w-full outline-none border border-gray-300 focus:border-gray-700 rounded-sm focus:shadow-sm'
                   placeholder='Confirm Password'
-                  {...register(NameField.Confirm_Password, rule.confirm_password)}
+                  {...register(NameField.Confirm_Password)}
                 />
                 {renderShowHideButton(NameField.Confirm_Password)}
                 <div className='mt-1 text-red-600 min-h-[1.25rem] text-sm'>{errors.confirm_password?.message}</div>

@@ -1,4 +1,6 @@
 import type { RegisterOptions, UseFormGetValues } from "react-hook-form";
+import * as yup from "yup";
+
 type Rules = {
   [key: string]: RegisterOptions;
 };
@@ -41,3 +43,28 @@ export const validateLoginOrRegister = (getValuesInput: UseFormGetValues<any>): 
         : undefined
   }
 });
+
+export const schema = yup.object({
+  email: yup
+    .string()
+    .required("Password can not blank.")
+    .matches(
+      // eslint-disable-next-line no-useless-escape
+      /^([A-Za-z0-9]([\.]?[A-Za-z0-9_\-])*)\@[a-zA-Z0-9][_\-a-zA-Z0-9]{4,159}(\.[a-zA-Z0-9][_\-a-zA-Z0-9]*)+$/,
+      "Please key in a valid email address."
+    ),
+  password: yup
+    .string()
+    .required("Password can not blank.")
+    .matches(/^[a-zA-Z0-9!@#$%^&*]{6,160}$/, "Please key in a valid confirm password"),
+  confirm_password: yup
+    .string()
+    .required("Password can not blank.")
+    .matches(/^[a-zA-Z0-9!@#$%^&*]{6,160}$/, "Please key in a valid confirm password")
+    .oneOf([yup.ref("password")], "Confirm Email does not match.")
+});
+
+const schemaLogin = schema.omit(["confirm_password"]);
+export type SchemaLogin = yup.InferType<typeof schemaLogin>;
+
+export type Schema = yup.InferType<typeof schema>;
