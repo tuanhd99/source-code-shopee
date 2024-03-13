@@ -1,10 +1,13 @@
 // eslint-disable-next-line import/no-unresolved
 
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation } from "@tanstack/react-query";
+import { omit } from "lodash";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import Image from "src/assets/Image";
+import { RegisterAccount } from "src/auth/authAPI";
 import { RouterPath } from "src/router/util";
 import { NameField } from "src/utils/enum";
 import { Schema, schema } from "src/utils/validate";
@@ -23,8 +26,17 @@ function Register() {
     resolver: yupResolver(schema)
   });
 
+  const registerAccountMutation = useMutation({
+    mutationFn: (body: { email: string; password: string }) => RegisterAccount(body)
+  });
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    const body = omit(data, ["confirm_password"]);
+    registerAccountMutation.mutate(body, {
+      onSuccess: (data) => {
+        console.log(data);
+      }
+    });
   });
 
   const renderShowHideButton = (fieldName: any) => {
@@ -148,7 +160,6 @@ function Register() {
                   {...register(NameField.Password)}
                 />
                 {renderShowHideButton(NameField.Password)}
-
                 <div className='mt-1 text-red-600 min-h-[1.25rem] text-sm'>{errors.password?.message}</div>
               </div>
               <div className='mt-2 relative'>
