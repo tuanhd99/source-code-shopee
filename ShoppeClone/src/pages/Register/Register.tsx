@@ -5,23 +5,28 @@ import { useMutation } from "@tanstack/react-query";
 import { omit } from "lodash";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import Image from "src/assets/Image";
 import { RegisterAccount } from "src/auth/authAPI";
+import { ResponseApi } from "src/auth/models";
+import LoadingContainer from "src/components/loading/LoadingContainer";
 import { RouterPath } from "src/router/util";
 import { NameField } from "src/utils/enum";
-import { Schema, schema } from "src/utils/validate";
+import { Schema, isAxiosUnprocessableEntity, schema } from "src/utils/validate";
 
 type IFormInputs = Schema;
 function Register() {
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch
+    watch,
+    setError
   } = useForm<IFormInputs>({
     resolver: yupResolver(schema)
   });
@@ -33,8 +38,31 @@ function Register() {
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ["confirm_password"]);
     registerAccountMutation.mutate(body, {
-      onSuccess: (data) => {
-        console.log(data);
+      onSuccess: () => {
+        toast.success("Đăng kí thành công");
+        navigate("/login");
+      },
+      onError(error) {
+        if (isAxiosUnprocessableEntity<ResponseApi<Omit<IFormInputs, "confirm_password">>>(error)) {
+          const formError = error.response?.data.data;
+          // if (formError) {
+          //   Object.keys(formError).forEach((key) => {
+          //     setError(key as keyof Omit<IFormInputs, "confirm_password">, {
+          //       message: "There is an existing email address"
+          //     });
+          //   });
+          // }
+          if (formError?.email) {
+            setError("email", {
+              message: "Email address đã tồn tại."
+            });
+          }
+          if (formError?.password) {
+            setError("password", {
+              message: formError.password
+            });
+          }
+        }
       }
     });
   });
@@ -132,6 +160,7 @@ function Register() {
 
   return (
     <div className='bg-orange'>
+      {registerAccountMutation.isPending ? <LoadingContainer /> : null}
       <div className='container'>
         <div className='grid grid-cols-1 lg:grid-cols-5 py-12 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-3 mx-auto flex items-center flex-col '>

@@ -1,5 +1,8 @@
+/* eslint-disable import/no-named-as-default-member */
+import axios, { AxiosError } from "axios";
 import type { RegisterOptions, UseFormGetValues } from "react-hook-form";
 import * as yup from "yup";
+import { HttpStatusCode } from "./constants";
 
 type Rules = {
   [key: string]: RegisterOptions;
@@ -9,37 +12,37 @@ export const validateLoginOrRegister = (getValuesInput: UseFormGetValues<any>): 
   email: {
     required: {
       value: true,
-      message: "Email address can not blank."
+      message: "Địa chỉ email không được để trống."
     },
     pattern: {
       value:
         // eslint-disable-next-line no-useless-escape
         /^([A-Za-z0-9]([\.]?[A-Za-z0-9_\-])*)\@[a-zA-Z0-9][_\-a-zA-Z0-9]{4,159}(\.[a-zA-Z0-9][_\-a-zA-Z0-9]*)+$/,
-      message: "Please key in a valid email address."
+      message: "Vui lòng nhập địa chỉ email hợp lệ."
     }
   },
   password: {
     required: {
       value: true,
-      message: "Password can not blank."
+      message: "Mật khẩu không được để trống."
     },
     pattern: {
       value: /^[a-zA-Z0-9!@#$%^&*]{6,160}$/,
-      message: "Please key in a valid password"
+      message: "Vui lòng nhập mật khẩu hợp lệ."
     }
   },
   confirm_password: {
     required: {
       value: true,
-      message: " Confirm Password can not blank."
+      message: "Xác nhận mật khẩu không được để trống."
     },
     pattern: {
       value: /^[a-zA-Z0-9!@#$%^&*]{6,160}$/,
-      message: "Please key in a valid confirm password"
+      message: "Vui lòng nhập mật khẩu hợp lệ."
     },
     validate:
       typeof getValuesInput === "function"
-        ? (value) => value === getValuesInput("password") || "Confirm Email does not match."
+        ? (value) => value === getValuesInput("password") || "Xác nhận Email không khớp."
         : undefined
   }
 });
@@ -47,24 +50,32 @@ export const validateLoginOrRegister = (getValuesInput: UseFormGetValues<any>): 
 export const schema = yup.object({
   email: yup
     .string()
-    .required("Password can not blank.")
+    .required("Địa chỉ email không được để trống.")
     .matches(
       // eslint-disable-next-line no-useless-escape
       /^([A-Za-z0-9]([\.]?[A-Za-z0-9_\-])*)\@[a-zA-Z0-9][_\-a-zA-Z0-9]{4,159}(\.[a-zA-Z0-9][_\-a-zA-Z0-9]*)+$/,
-      "Please key in a valid email address."
+      "Vui lòng nhập địa chỉ email hợp lệ."
     ),
   password: yup
     .string()
-    .required("Password can not blank.")
-    .matches(/^[a-zA-Z0-9!@#$%^&*]{6,160}$/, "Please key in a valid confirm password"),
+    .required("Mật khẩu không được để trống.")
+    .matches(/^[a-zA-Z0-9!@#$%^&*]{6,160}$/, "Vui lòng nhập mật khẩu hợp lệ."),
   confirm_password: yup
     .string()
-    .required("Password can not blank.")
-    .matches(/^[a-zA-Z0-9!@#$%^&*]{6,160}$/, "Please key in a valid confirm password")
-    .oneOf([yup.ref("password")], "Confirm Email does not match.")
+    .required("Xác nhận mật khẩu không được để trống.")
+    .matches(/^[a-zA-Z0-9!@#$%^&*]{6,160}$/, "Vui lòng nhập mật khẩu hợp lệ.")
+    .oneOf([yup.ref("password")], "Xác nhận Email không khớp.")
 });
 
 const schemaLogin = schema.omit(["confirm_password"]);
 export type SchemaLogin = yup.InferType<typeof schemaLogin>;
 
 export type Schema = yup.InferType<typeof schema>;
+
+export const isAxiosError = <T>(error: unknown): error is AxiosError<T> => {
+  return axios.isAxiosError(error);
+};
+
+export const isAxiosUnprocessableEntity = <T>(error: unknown): error is AxiosError<T> => {
+  return isAxiosError(error) && error.response?.status === HttpStatusCode.UnprocessableEntity;
+};

@@ -7,6 +7,9 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+config.autoAddCss = false;
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,7 +25,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <App />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-      <ToastContainer position='top-right' autoClose={5000} theme='light' hideProgressBar={false} />
+      <ToastContainer position='top-right' autoClose={5000} theme='light' hideProgressBar closeOnClick={false} />
     </BrowserRouter>
   </React.StrictMode>
 );
