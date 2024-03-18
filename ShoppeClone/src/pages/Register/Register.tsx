@@ -54,7 +54,7 @@ function Register() {
           // }
           if (formError?.email) {
             setError("email", {
-              message: "Email address đã tồn tại."
+              message: "Địa chỉ email đã tồn tại."
             });
           }
           if (formError?.password) {

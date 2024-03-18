@@ -1,15 +1,15 @@
 import { Outlet } from "react-router-dom";
 import Footer from "../Footer";
-import RegisterHeader from "./RegisterHeader";
+import MainHeader from "./MainHeader";
 
-function RegisterLayout() {
+function MainLayout() {
   return (
     <>
-      <RegisterHeader />
+      <MainHeader />
       <Outlet />
       <Footer />
     </>
   );
 }
 
-export default RegisterLayout;
+export default MainLayout;
