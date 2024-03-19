@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-
 function RegisterHeader() {
   return (
     <header className='py-3 '>

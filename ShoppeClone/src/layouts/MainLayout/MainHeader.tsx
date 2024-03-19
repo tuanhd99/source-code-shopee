@@ -1,9 +1,43 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  autoUpdate,
+  flip,
+  offset,
+  shift,
+  useDismiss,
+  useFloating,
+  useFocus,
+  useHover,
+  useInteractions,
+  useRole
+} from "@floating-ui/react";
 import { faCartShopping, faChevronDown, faGlobe, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import Image from "src/assets/Image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import Image from "src/assets/Image";
 
 function MainHeader() {
+  const [isOpen, setIsOpen] = useState(true);
+  const { refs, context } = useFloating({
+    open: isOpen,
+    onOpenChange: setIsOpen,
+    placement: "bottom",
+    whileElementsMounted: autoUpdate,
+    middleware: [
+      offset(5),
+      flip({
+        fallbackAxisSideDirection: "start"
+      }),
+      shift()
+    ]
+  });
+  const hover = useHover(context, { move: false });
+  const focus = useFocus(context);
+  const dismiss = useDismiss(context);
+  const role = useRole(context, {
+    role: "tooltip"
+  });
+  const { getReferenceProps, getFloatingProps } = useInteractions([hover, focus, dismiss, role]);
   return (
     <div className='pb-5 pt-2 bg-gradient-to-b from-[#f53d2d] to-[#f63] text-white'>
       <div className='container '>
@@ -49,8 +83,17 @@ function MainHeader() {
           </form>
           <div className='col-span-1'>
             <Link>
-              <FontAwesomeIcon icon={faCartShopping} fontSize={20} />
+              <FontAwesomeIcon icon={faCartShopping} fontSize={20} ref={refs.reference} {...getReferenceProps()} />
             </Link>
+            {isOpen && (
+              <div
+                ref={refs.setFloating}
+                className='bg-gray-800 text-white p-2 rounded-md shadow-md shrink-0'
+                {...getFloatingProps()}
+              >
+                Im a tooltip!
+              </div>
+            )}
           </div>
         </div>
       </div>
