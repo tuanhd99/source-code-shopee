@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import Image from "src/assets/Image";
 import { LoginAccount } from "src/auth/authAPI";
 import { ResponseApi } from "src/auth/models";
+import LoadingContainer from "src/components/loading/LoadingContainer";
 import { RouterPath } from "src/router/util";
 import { NameField } from "src/utils/enum";
 import { SchemaLogin, isAxiosUnprocessableEntity, schemaLogin } from "src/utils/validate";
@@ -98,6 +99,7 @@ function Login() {
   };
   return (
     <div className='bg-orange'>
+      {LoginAccountMutation.isPending ? <LoadingContainer /> : null}
       <div className='container'>
         <div className='grid grid-cols-1 lg:grid-cols-5 py-12 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-3 mx-auto flex items-center flex-col '>
