@@ -75,10 +75,56 @@ function MainHeader() {
               </button>
             </div>
           </form>
-          <div className='col-span-1'>
-            <Link>
-              <FontAwesomeIcon icon={faCartShopping} fontSize={20} />
-            </Link>
+          <div className='col-span-1 justify-self-start '>
+            <Popver
+              renderPopover={
+                <div className='bg-white relative shadow-md rounded-sm border-gray-200 text-sm max-w-[500px]'>
+                  <div className='p-2'>
+                    <div className='text-gray-400 capitalize'>Sản phẩm mới thêm</div>
+                    <div className='mt-5'>
+                      <div className='mt-4 flex'>
+                        <div className='flex w-full items-center'>
+                          <img src={Image.Avatar} alt='img' className='w-11 h-11 object-cover' />
+                          <div className='flex-grow ml-2 overflow-hidden'>
+                            <div className='truncate'>
+                              Bộ nồi Inoc 3 đáy sunnhouse sh334 16,20,24 cm, Bộ nồi Inoc 3 đáy sunnhouse sh334 16,20,24
+                              cm
+                            </div>
+                          </div>
+                          <div className='ml-2 flex-shrink-0'>
+                            <span className='text-orange'>đ649.000</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className='mt-4 flex'>
+                        <div className='flex w-full items-center'>
+                          <img src={Image.Avatar} alt='img' className='w-11 h-11 object-cover' />
+                          <div className='flex-grow ml-2 overflow-hidden'>
+                            <div className='truncate'>
+                              Bộ nồi Inoc 3 đáy sunnhouse sh334 16,20,24 cm, Bộ nồi Inoc 3 đáy sunnhouse sh334 16,20,24
+                              cm
+                            </div>
+                          </div>
+                          <div className='ml-2 flex-shrink-0'>
+                            <span className='text-orange'>đ649.000</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='flex mt-6 items-center justify-between'>
+                      <div className='capitalize text-sx text-gray-500'>1 Thêm vào giỏ hàng</div>
+                      <button className='capitalize px-4 py-2 rounded-sm bg-orange hover:bg-opacity-90 text-white'>
+                        Xem giỏ hàng
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              }
+            >
+              <Link>
+                <FontAwesomeIcon icon={faCartShopping} fontSize={20} />
+              </Link>
+            </Popver>
           </div>
         </div>
       </div>
