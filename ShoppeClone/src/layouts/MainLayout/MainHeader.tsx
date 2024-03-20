@@ -1,63 +1,57 @@
-import {
-  autoUpdate,
-  flip,
-  offset,
-  shift,
-  useDismiss,
-  useFloating,
-  useFocus,
-  useHover,
-  useInteractions,
-  useRole
-} from "@floating-ui/react";
 import { faCartShopping, faChevronDown, faGlobe, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import Image from "src/assets/Image";
+import Popver from "src/components/Popver";
 
 function MainHeader() {
-  const [isOpen, setIsOpen] = useState(true);
-  const { refs, context } = useFloating({
-    open: isOpen,
-    onOpenChange: setIsOpen,
-    placement: "bottom",
-    whileElementsMounted: autoUpdate,
-    middleware: [
-      offset(5),
-      flip({
-        fallbackAxisSideDirection: "start"
-      }),
-      shift()
-    ]
-  });
-  const hover = useHover(context, { move: false });
-  const focus = useFocus(context);
-  const dismiss = useDismiss(context);
-  const role = useRole(context, {
-    role: "tooltip"
-  });
-  const { getReferenceProps, getFloatingProps } = useInteractions([hover, focus, dismiss, role]);
   return (
     <div className='pb-5 pt-2 bg-gradient-to-b from-[#f53d2d] to-[#f63] text-white'>
-      <div className='container '>
+      <div className='container mx-10'>
         <div className='flex items-center justify-between '>
           <div className='flex gap-2'>
             <span className='border-r-2 pr-2 h-4 border-r-white'>Tải ứng dụng</span>
             <span>Kết nối</span>
           </div>
-          <div className='flex items-center gap-2 py-1'>
-            <div className='flex gap-2 items-center cursor-pointer'>
+          <div className='flex items-center gap-2 py-1 '>
+            <Popver
+              className='flex gap-2 items-center cursor-pointer'
+              renderPopover={
+                <div className='bg-white shadow-md rounded-sm border-gray-200'>
+                  <div className='flex flex-col gap-1 px-3'>
+                    <button className='py-1 px-2 hover:text-orange'>Tiếng Việt</button>
+                    <button className='py-1 px-2 hover:text-orange mt-1'>Tiếng Anh</button>
+                  </div>
+                </div>
+              }
+            >
               <FontAwesomeIcon icon={faGlobe} fontSize={16} color='#ffffff' />
               <span>Tiếng Việt</span>
               <FontAwesomeIcon icon={faChevronDown} color='#ffffff' />
-            </div>
-            <div className='flex items-center justify-center'>
+            </Popver>
+            <Popver
+              className='flex items-center justify-center'
+              renderPopover={
+                <div className='bg-white shadow-md rounded-sm border-gray-200'>
+                  <div className='flex flex-col px-3 gap-1'>
+                    <Link to='/' className='block py-1 px-2 hover:text-cyan-300'>
+                      Tài khoản của tôi
+                    </Link>
+                    <Link to='/' className='block py-1 px-2 hover:text-cyan-300'>
+                      Đơn mua
+                    </Link>
+                    <span className='py-1 px-2  hover:text-cyan-300 cursor-pointer'>Đăng xuất</span>
+                  </div>
+                </div>
+              }
+            >
               <div className='w-6 h-6 flex shrink-0 mr-2'>
                 <img className='w-full h-full cursor-pointer rounded-full' src={Image.Avatar} alt='avatar' />
               </div>
               <span>Kane.Do</span>
-            </div>
+            </Popver>
+
+            <div className='flex items-center justify-center'></div>
           </div>
         </div>
         <div className='grid grid-cols-12 items-end gap-4'>
@@ -83,17 +77,8 @@ function MainHeader() {
           </form>
           <div className='col-span-1'>
             <Link>
-              <FontAwesomeIcon icon={faCartShopping} fontSize={20} ref={refs.reference} {...getReferenceProps()} />
+              <FontAwesomeIcon icon={faCartShopping} fontSize={20} />
             </Link>
-            {isOpen && (
-              <div
-                ref={refs.setFloating}
-                className='bg-gray-800 text-white p-2 rounded-md shadow-md shrink-0'
-                {...getFloatingProps()}
-              >
-                Im a tooltip!
-              </div>
-            )}
           </div>
         </div>
       </div>
