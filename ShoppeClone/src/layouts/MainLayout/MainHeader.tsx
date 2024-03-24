@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import Image from "src/assets/Image";
 import Popver from "src/components/Popver";
+import { RouterPath } from "src/router/util";
 
 function MainHeader() {
   return (
@@ -34,7 +35,7 @@ function MainHeader() {
               renderPopover={
                 <div className='bg-white shadow-md rounded-sm border-gray-200'>
                   <div className='flex flex-col px-3 gap-1'>
-                    <Link to='/' className='block py-1 px-2 hover:text-cyan-300'>
+                    <Link to={RouterPath.Profile} className='block py-1 px-2 hover:text-cyan-300'>
                       Tài khoản của tôi
                     </Link>
                     <Link to='/' className='block py-1 px-2 hover:text-cyan-300'>
@@ -75,7 +76,7 @@ function MainHeader() {
               </button>
             </div>
           </form>
-          <div className='col-span-1 justify-self-start '>
+          <div className='col-span-1 justify-self-center '>
             <Popver
               renderPopover={
                 <div className='bg-white relative shadow-md rounded-sm border-gray-200 text-sm max-w-[500px]'>
