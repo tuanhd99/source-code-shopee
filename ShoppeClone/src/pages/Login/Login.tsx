@@ -2,16 +2,18 @@
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Image from "src/assets/Image";
 import { LoginAccount } from "src/auth/authAPI";
 import { ResponseApi } from "src/auth/models";
 import LoadingContainer from "src/components/loading/LoadingContainer";
+import { AppContext } from "src/contexts/App.Context";
 import { RouterPath } from "src/router/util";
 import { NameField } from "src/utils/enum";
+import { saveToLocalStorage } from "src/utils/function";
 import { SchemaLogin, isAxiosUnprocessableEntity, schemaLogin } from "src/utils/validate";
 
 function Login() {
@@ -26,19 +28,27 @@ function Login() {
   } = useForm<IFormInputs>({
     resolver: yupResolver(schemaLogin)
   });
-  console.log(watch("password"));
+  const navigate = useNavigate();
 
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
+  const { setIsAuthenticated } = useContext(AppContext);
 
   const LoginAccountMutation = useMutation({
     mutationFn: (body: { email: string; password: string }) => LoginAccount(body)
   });
   const onSubmit = handleSubmit((data) => {
     LoginAccountMutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: (response) => {
+        const { data } = response;
+        saveToLocalStorage("access_token", data.data?.access_token || "");
+        saveToLocalStorage("refresh_token", data.data?.refresh_token || "");
+        setIsAuthenticated(true);
+        navigate("/");
         toast.success("Đăng nhập thành công");
       },
       onError(error) {
+        console.log(error);
+
         if (isAxiosUnprocessableEntity<ResponseApi<IFormInputs>>(error)) {
           const formError = error.response?.data.data;
           if (formError) {

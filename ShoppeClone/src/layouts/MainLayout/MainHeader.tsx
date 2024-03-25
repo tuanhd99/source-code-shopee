@@ -1,13 +1,32 @@
 import { faCartShopping, faChevronDown, faGlobe, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useMutation } from "@tanstack/react-query";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import Image from "src/assets/Image";
+import { LogoutAccount } from "src/auth/authAPI";
 import Popver from "src/components/Popver";
+import LoadingContainer from "src/components/loading/LoadingContainer";
+import { AppContext } from "src/contexts/App.Context";
 import { RouterPath } from "src/router/util";
+import { removeKeyLocalStorage } from "src/utils/function";
 
 function MainHeader() {
+  const { isAuthenticated, setIsAuthenticated } = useContext(AppContext);
+  const logOutMutation = useMutation({
+    mutationFn: LogoutAccount,
+    onSuccess: () => {
+      setIsAuthenticated(false);
+      removeKeyLocalStorage("refresh_token");
+      removeKeyLocalStorage("access_token");
+    }
+  });
+  const handleLogOut = () => {
+    logOutMutation.mutate();
+  };
   return (
     <div className='pb-5 pt-2 bg-gradient-to-b from-[#f53d2d] to-[#f63] text-white'>
+      {logOutMutation.isPending ? <LoadingContainer /> : ""}
       <div className='container mx-10'>
         <div className='flex items-center justify-between '>
           <div className='flex gap-2'>
@@ -19,9 +38,13 @@ function MainHeader() {
               className='flex gap-2 items-center cursor-pointer'
               renderPopover={
                 <div className='bg-white shadow-md rounded-sm border-gray-200'>
-                  <div className='flex flex-col gap-1 px-3'>
-                    <button className='py-1 px-2 hover:text-orange'>Tiếng Việt</button>
-                    <button className='py-1 px-2 hover:text-orange mt-1'>Tiếng Anh</button>
+                  <div className='flex flex-col '>
+                    <button className='pl-2 pr-10 pt-2 pb-1 hover:text-orange text-sm hover:bg-gray-100'>
+                      Tiếng Việt
+                    </button>
+                    <button className='pl-2 pr-10 pt-1 pb-2 hover:text-orange mt-1 text-sm hover:bg-gray-100'>
+                      Tiếng Anh
+                    </button>
                   </div>
                 </div>
               }
@@ -30,27 +53,45 @@ function MainHeader() {
               <span>Tiếng Việt</span>
               <FontAwesomeIcon icon={faChevronDown} color='#ffffff' />
             </Popver>
-            <Popver
-              className='flex items-center justify-center'
-              renderPopover={
-                <div className='bg-white shadow-md rounded-sm border-gray-200'>
-                  <div className='flex flex-col px-3 gap-1'>
-                    <Link to={RouterPath.Profile} className='block py-1 px-2 hover:text-cyan-300'>
-                      Tài khoản của tôi
-                    </Link>
-                    <Link to='/' className='block py-1 px-2 hover:text-cyan-300'>
-                      Đơn mua
-                    </Link>
-                    <span className='py-1 px-2  hover:text-cyan-300 cursor-pointer'>Đăng xuất</span>
+            {isAuthenticated && (
+              <Popver
+                className='flex items-center justify-center'
+                renderPopover={
+                  <div className='bg-white shadow-md rounded-sm border-gray-200'>
+                    <div className='flex flex-col gap-1'>
+                      <Link to={RouterPath.Profile} className='block py-2 px-3 hover:text-cyan-300 hover:bg-gray-100'>
+                        Tài khoản của tôi
+                      </Link>
+                      <Link to='/' className='block py-2 px-3 hover:text-cyan-300 hover:bg-gray-100'>
+                        Đơn mua
+                      </Link>
+                      <span
+                        className='py-2 px-3  hover:text-cyan-300 cursor-pointer hover:bg-gray-100'
+                        onClick={() => handleLogOut()}
+                        aria-hidden='true'
+                      >
+                        Đăng xuất
+                      </span>
+                    </div>
                   </div>
+                }
+              >
+                <div className='w-6 h-6 flex shrink-0 mr-2'>
+                  <img className='w-full h-full cursor-pointer rounded-full' src={Image.Avatar} alt='avatar' />
                 </div>
-              }
-            >
-              <div className='w-6 h-6 flex shrink-0 mr-2'>
-                <img className='w-full h-full cursor-pointer rounded-full' src={Image.Avatar} alt='avatar' />
+                <span>Kane.Do</span>
+              </Popver>
+            )}
+            {!isAuthenticated && (
+              <div className='flex items-center'>
+                <Link to='/register' className='mx-3 capitalize hover:text-white/70'>
+                  Đăng kí
+                </Link>
+                <Link to='/login' className='border-l-[1px] border-l-white/40 px-3 mr-3 capitalize hover:text-white/70'>
+                  Đăng nhập
+                </Link>
               </div>
-              <span>Kane.Do</span>
-            </Popver>
+            )}
 
             <div className='flex items-center justify-center'></div>
           </div>

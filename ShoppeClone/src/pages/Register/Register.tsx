@@ -13,6 +13,7 @@ import { ResponseApi } from "src/auth/models";
 import LoadingContainer from "src/components/loading/LoadingContainer";
 import { RouterPath } from "src/router/util";
 import { NameField } from "src/utils/enum";
+import { saveToLocalStorage } from "src/utils/function";
 import { Schema, isAxiosUnprocessableEntity, schema } from "src/utils/validate";
 
 type IFormInputs = Schema;
@@ -38,9 +39,12 @@ function Register() {
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ["confirm_password"]);
     registerAccountMutation.mutate(body, {
-      onSuccess: () => {
+      onSuccess: (response) => {
+        const { data } = response;
+        saveToLocalStorage("access_token", data.data?.access_token || "");
+        saveToLocalStorage("refresh_token", data.data?.refresh_token || "");
         toast.success("Đăng kí thành công");
-        navigate("/login");
+        navigate("/");
       },
       onError(error) {
         if (isAxiosUnprocessableEntity<ResponseApi<Omit<IFormInputs, "confirm_password">>>(error)) {

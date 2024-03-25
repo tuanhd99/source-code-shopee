@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { toast } from "react-toastify";
 import { HttpStatusCode } from "src/utils/constants";
+import { getFromLocalStorage } from "src/utils/function";
 
 class fetHandlerAxios {
   instance: AxiosInstance;
@@ -12,6 +13,16 @@ class fetHandlerAxios {
         "Content-Type": "application/json"
       }
     });
+    this.instance.interceptors.request.use(
+      (config) => {
+        const access_token = getFromLocalStorage("access_token");
+        if (access_token) {
+          config.headers.Authorization = access_token;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
     this.instance.interceptors.response.use(
       function (response) {
         return response;
