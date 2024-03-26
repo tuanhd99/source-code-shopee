@@ -47,8 +47,6 @@ function Login() {
         toast.success("Đăng nhập thành công");
       },
       onError(error) {
-        console.log(error);
-
         if (isAxiosUnprocessableEntity<ResponseApi<IFormInputs>>(error)) {
           const formError = error.response?.data.data;
           if (formError) {

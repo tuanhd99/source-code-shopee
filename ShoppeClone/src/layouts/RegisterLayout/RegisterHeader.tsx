@@ -1,6 +1,7 @@
 import { Link, useMatch } from "react-router-dom";
+import { RouterPath } from "src/router/util";
 function RegisterHeader() {
-  const registerMatch = useMatch("/register");
+  const registerMatch = useMatch(RouterPath.Register);
   const isRegister = Boolean(registerMatch);
   return (
     <header className='py-3 '>

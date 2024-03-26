@@ -84,10 +84,13 @@ function MainHeader() {
             )}
             {!isAuthenticated && (
               <div className='flex items-center'>
-                <Link to='/register' className='mx-3 capitalize hover:text-white/70'>
+                <Link to={RouterPath.Register} className='mx-3 capitalize hover:text-white/70'>
                   Đăng kí
                 </Link>
-                <Link to='/login' className='border-l-[1px] border-l-white/40 px-3 mr-3 capitalize hover:text-white/70'>
+                <Link
+                  to={RouterPath.Login}
+                  className='border-l-[1px] border-l-white/40 px-3 mr-3 capitalize hover:text-white/70'
+                >
                   Đăng nhập
                 </Link>
               </div>
