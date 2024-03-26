@@ -5,20 +5,24 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import Image from "src/assets/Image";
 import { LogoutAccount } from "src/auth/authAPI";
+import { User } from "src/auth/models";
 import Popver from "src/components/Popver";
 import LoadingContainer from "src/components/loading/LoadingContainer";
 import { AppContext } from "src/contexts/App.Context";
 import { RouterPath } from "src/router/util";
-import { removeKeyLocalStorage } from "src/utils/function";
+import { getFromLocalStorage, removeKeyLocalStorage } from "src/utils/function";
 
 function MainHeader() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AppContext);
+  const userInfo: User = getFromLocalStorage("user");
+
   const logOutMutation = useMutation({
     mutationFn: LogoutAccount,
     onSuccess: () => {
       setIsAuthenticated(false);
       removeKeyLocalStorage("refresh_token");
       removeKeyLocalStorage("access_token");
+      removeKeyLocalStorage("user");
     }
   });
   const handleLogOut = () => {
@@ -79,7 +83,7 @@ function MainHeader() {
                 <div className='w-6 h-6 flex shrink-0 mr-2'>
                   <img className='w-full h-full cursor-pointer rounded-full' src={Image.Avatar} alt='avatar' />
                 </div>
-                <span>Kane.Do</span>
+                <span>{userInfo.email}</span>
               </Popver>
             )}
             {!isAuthenticated && (

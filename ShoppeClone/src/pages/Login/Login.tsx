@@ -42,6 +42,7 @@ function Login() {
         const { data } = response;
         saveToLocalStorage("access_token", data.data?.access_token || "");
         saveToLocalStorage("refresh_token", data.data?.refresh_token || "");
+        saveToLocalStorage("user", data.data?.user);
         setIsAuthenticated(true);
         navigate("/");
         toast.success("Đăng nhập thành công");

@@ -5,6 +5,7 @@ import MainLayout from "src/layouts/MainLayout";
 import RegisterLayout from "src/layouts/RegisterLayout/RegisterLayout";
 import { RouterPath } from "./util";
 import ProtectedRoute from "./ProtectedRoute";
+import RestricRoute from "./RestricRoute";
 
 const Login = React.lazy(() => import("src/pages/Login"));
 const Register = React.lazy(() => import("src/pages/Register"));
@@ -45,7 +46,9 @@ export default function useRounterElement() {
           index: true,
           element: (
             <Suspense fallback={<LoadingArea />}>
-              <Login />
+              <RestricRoute>
+                <Login />
+              </RestricRoute>
             </Suspense>
           )
         }
@@ -59,7 +62,9 @@ export default function useRounterElement() {
           index: true,
           element: (
             <Suspense fallback={<LoadingArea />}>
-              <Register />
+              <RestricRoute>
+                <Register />
+              </RestricRoute>
             </Suspense>
           )
         }

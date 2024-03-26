@@ -1,5 +1,7 @@
+import { User } from "src/auth/models";
+
 // Save value to localStorage
-export const saveToLocalStorage = (key: string, value: string) => {
+export const saveToLocalStorage = (key: string, value?: string | User) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 

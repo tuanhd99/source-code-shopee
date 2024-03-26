@@ -41,8 +41,9 @@ function Register() {
     registerAccountMutation.mutate(body, {
       onSuccess: (response) => {
         const { data } = response;
-        saveToLocalStorage("access_token", data.data?.access_token || "");
-        saveToLocalStorage("refresh_token", data.data?.refresh_token || "");
+        saveToLocalStorage("access_token", data.data?.access_token);
+        saveToLocalStorage("refresh_token", data.data?.refresh_token);
+        saveToLocalStorage("user", data.data?.user);
         toast.success("Đăng kí thành công");
         navigate("/");
       },
