@@ -1,4 +1,3 @@
-# source-code-shopee
-# Setting
-# Npm install 
-# Npm run dev
+* setting
+* npm install 
+* npm run dev
