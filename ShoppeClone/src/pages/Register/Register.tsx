@@ -45,7 +45,7 @@ function Register() {
         saveToLocalStorage("refresh_token", data.data?.refresh_token);
         saveToLocalStorage("user", data.data?.user);
         toast.success("Đăng kí thành công");
-        navigate("/");
+        navigate(RouterPath.Index);
       },
       onError(error) {
         if (isAxiosUnprocessableEntity<ResponseApi<Omit<IFormInputs, "confirm_password">>>(error)) {

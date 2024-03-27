@@ -44,7 +44,7 @@ function Login() {
         saveToLocalStorage("refresh_token", data.data?.refresh_token || "");
         saveToLocalStorage("user", data.data?.user);
         setIsAuthenticated(true);
-        navigate("/");
+        navigate(RouterPath.Index);
         toast.success("Đăng nhập thành công");
       },
       onError(error) {
