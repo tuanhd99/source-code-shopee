@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import AppProvide from "./contexts/App.Context.tsx";
+import "./i18n/i18n.ts";
 config.autoAddCss = false;
 
 const queryClient = new QueryClient({

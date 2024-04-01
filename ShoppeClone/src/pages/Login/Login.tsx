@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Image from "src/assets/Image";
@@ -18,6 +19,7 @@ import { SchemaLogin, isAxiosUnprocessableEntity, schemaLogin } from "src/utils/
 
 function Login() {
   type IFormInputs = SchemaLogin;
+  const { t } = useTranslation();
 
   const {
     register,
@@ -118,7 +120,7 @@ function Login() {
           </div>
           <div className='lg:col-span-2 lg:col-start-4'>
             <form className='p-10 rounded bg-white shadow-sm' onSubmit={onSubmit} noValidate>
-              <div className='text-2xl'>Đăng Nhập</div>
+              <div className='text-2xl'>{t("Login")}</div>
               <div className='mt-8'>
                 <input
                   type='email'
@@ -145,14 +147,14 @@ function Login() {
                   type='submit'
                   className='w-full text-center py-4 px-2 uppercase bg-red-500 text-white text-sm hover:bg-red-600'
                 >
-                  Đăng nhập
+                  {t("Login")}
                 </button>
               </div>
               <div className='mt-8 text-center'>
                 <div className='flex items-center justify-center mt-8'>
                   <span className='text-slate-400'>Bạn đã có tài khoản?</span>
                   <Link to={RouterPath.Register} className='text-red-400 ml-1'>
-                    Đăng kí
+                    {t("Register")}
                   </Link>
                 </div>
               </div>
