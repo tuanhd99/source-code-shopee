@@ -10,8 +10,8 @@ function SortProduct() {
           <button className='h-8 px-3 capitalize bg-orange text-white hover:bg-orange/80'>Phổ biến</button>
           <button className='h-8 px-3 capitalize bg-white text-black hover:bg-white/80'>Mới nhất</button>
           <button className='h-8 px-3 capitalize bg-white text-black hover:bg-white/80'>Bán chạy</button>
-          <select name='' id='' className='h-8  px-4 capitalize bg-white text-sm text-black text-left'>
-            <option>Giá</option>
+          <select name='' id='' className='h-8  px-4 capitalize bg-white text-sm text-black text-left outline-none'>
+            <option disabled>Giá</option>
             <option>Giá: thấp đến cao</option>
             <option>Giá: cao đến thấp</option>
           </select>

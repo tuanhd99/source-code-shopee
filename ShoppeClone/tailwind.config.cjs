@@ -10,6 +10,9 @@ module.exports = {
     extend: {
       colors: {
         orange: "#ee4d2d"
+      },
+      height: {
+        "100vh-h-28": "calc(100% - 28rem)"
       }
     }
   },
@@ -26,5 +29,6 @@ module.exports = {
         }
       });
     })
+    // require('@tailwindcss/line-clamp'),
   ]
 };

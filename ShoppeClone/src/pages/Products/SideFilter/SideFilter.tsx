@@ -40,13 +40,13 @@ function SideFilter() {
             <input
               type='text'
               className='grow p-1 w-full outline-none border border-gray 300 focus:border-gray-500 rounded-sm focus:shadow-sm'
-              placeholder='đ Từ'
+              placeholder='₫ TỪ'
             />
             <div className='mx-2 mt-1 shrink-0'>-</div>
             <input
               type='text'
               className='grow p-1 w-full outline-none border border-gray 300 focus:border-gray-500 rounded-sm focus:shadow-sm'
-              placeholder='đ Đến'
+              placeholder='₫ ĐẾN'
             />
           </div>
           <button className='uppercase p-2 mt-3 w-full bg-orange text-white flex justify-center items-center text-sm hover:bg-orange/80   '>
@@ -60,7 +60,7 @@ function SideFilter() {
             {Array(5)
               .fill(0)
               .map((_, index) => {
-                return <FontAwesomeIcon icon={faStar} key={index} style={{ color: "yellow" }} />;
+                return <FontAwesomeIcon icon={faStar} key={index} style={{ color: "#ffa727" }} />;
               })}
             <span> trở lên</span>
           </li>
@@ -68,7 +68,7 @@ function SideFilter() {
             {Array(3)
               .fill(0)
               .map((_, index) => {
-                return <FontAwesomeIcon icon={faStar} key={index} style={{ color: "yellow" }} />;
+                return <FontAwesomeIcon icon={faStar} key={index} style={{ color: "#ffa727" }} />;
               })}
             <span> trở lên</span>
           </li>

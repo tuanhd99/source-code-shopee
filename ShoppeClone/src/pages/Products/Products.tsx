@@ -4,7 +4,7 @@ import SortProduct from "./SortProducts";
 
 export default function Products() {
   return (
-    <div className='bg-gray-200 py-6 h-screen w-full'>
+    <div className='bg-gray-200 py-6 w-full h-100vh-h-28 mt-28'>
       <div className='container'>
         <div className='grid grid-cols-12 gap-8'>
           <div className='col-span-3'>
@@ -13,7 +13,7 @@ export default function Products() {
           <div className='col-span-9'>
             <SortProduct />
             <div className='mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3'>
-              {Array(30)
+              {Array(20)
                 .fill(0)
                 .map((_, index) => {
                   return (

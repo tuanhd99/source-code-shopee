@@ -3,7 +3,7 @@ import useRounterElement from "./router/useRounter";
 
 function App() {
   const routerElement = useRounterElement();
-  return <div>{routerElement}</div>;
+  return <div className='h-full w-full'>{routerElement}</div>;
 }
 
 export default App;

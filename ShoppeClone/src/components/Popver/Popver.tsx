@@ -62,6 +62,7 @@ export default function Popover({
               ref={refs.setFloating}
               style={{
                 transformOrigin: `${middlewareData.arrow?.x}px top`,
+                zIndex: 11,
                 ...floatingStyles
               }}
               {...getFloatingProps()}

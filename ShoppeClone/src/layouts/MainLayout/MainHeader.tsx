@@ -39,9 +39,9 @@ function MainHeader() {
     saveToLocalStorage("language", lg);
   };
   return (
-    <div className='pb-5 pt-2 bg-gradient-to-b from-[#f53d2d] to-[#f63] text-white sticky top-0'>
+    <div className='pb-5 pt-2 bg-gradient-to-b from-[#f53d2d] to-[#f63] text-white fixed top-0 left-0 w-full h-28 z-10'>
       {logOutMutation.isPending ? <LoadingContainer /> : ""}
-      <div className='container mx-10'>
+      <div className='container mx-10 '>
         <div className='flex items-center justify-between '>
           <div className='flex gap-2'>
             <span className='border-r-2 pr-2 h-4 border-r-white'>{t("Download_App")}</span>
@@ -140,7 +140,7 @@ function MainHeader() {
               </button>
             </div>
           </form>
-          <div className='col-span-1 justify-self-center '>
+          <div className='col-span-1 justify-self-center'>
             <Popver
               renderPopover={
                 <div className='bg-white relative shadow-md rounded-sm border-gray-200 text-sm max-w-[500px]'>
