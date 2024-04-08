@@ -16,3 +16,17 @@ export const getFromLocalStorage = (key: string) => {
 export const removeKeyLocalStorage = (key: string) => {
   localStorage.removeItem(key);
 };
+
+export const formattedCurrency = (n: number) => {
+  const formatter = new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" });
+  return formatter.format(n);
+};
+export const formatShopeeSalesCount = (salesCount: number) => {
+  return new Intl.NumberFormat("en", {
+    notation: "compact",
+    maximumFractionDigits: 1
+  })
+    .format(salesCount)
+    .replace(".", ",")
+    .toLocaleLowerCase();
+};
