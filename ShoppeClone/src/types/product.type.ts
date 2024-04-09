@@ -29,8 +29,8 @@ export interface ProductList {
 export interface ProductListConfig {
   page?: number | string;
   limit?: number | string;
-  sort_by?: "createdAt" | "view" | "sold" | "price";
-  order?: "asc" | "desc";
+  sort_by?: string;
+  order?: string;
   exclude?: string;
   rating_filter?: number | string;
   price_max?: number | string;

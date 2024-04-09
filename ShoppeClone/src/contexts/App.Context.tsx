@@ -13,7 +13,6 @@ export const AppContext = createContext<IAppContext>(InittialValue);
 
 function AppProvide({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(InittialValue.isAuthenticated);
-  console.log("isAuthenticated,", isAuthenticated);
 
   return <AppContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>{children}</AppContext.Provider>;
 }
