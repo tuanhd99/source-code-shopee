@@ -45,6 +45,19 @@ function Pagination(prop: IPropPagination) {
     }
   };
 
+  const handleViewMore = () => {
+    setCurrentPage(currentPage + 1);
+    handleClickPage(currentPage + 1);
+    setMaxPageNumberLimit(maxPageNumberLimit + pageNumberLitmit);
+    setMinPageNumberLimit(minPageNumberLimit + pageNumberLitmit);
+  };
+  const handleViewLess = () => {
+    setCurrentPage(currentPage - 1);
+    handleClickPage(currentPage - 1);
+    setMaxPageNumberLimit(maxPageNumberLimit - pageNumberLitmit);
+    setMinPageNumberLimit(minPageNumberLimit - pageNumberLitmit);
+  };
+
   const onRenderPageNumber = () => {
     if (!page_size) return null;
     const pages = Array(page_size)
@@ -53,7 +66,10 @@ function Pagination(prop: IPropPagination) {
     let pageIncreMentBtn = null;
     if (pages.length > maxPageNumberLimit) {
       pageIncreMentBtn = (
-        <button className='h-10 px-4 rounded-t-md bg-white/40 hover:bg-slate-200 cursor-pointer'>
+        <button
+          className='h-10 px-4 rounded-t-md bg-white/40 hover:bg-slate-200 cursor-pointer'
+          onClick={handleViewMore}
+        >
           <FontAwesomeIcon icon={faEllipsis} />
         </button>
       );
@@ -61,7 +77,10 @@ function Pagination(prop: IPropPagination) {
     let pageDecreMentBtn = null;
     if (minPageNumberLimit >= 1) {
       pageDecreMentBtn = (
-        <button className='h-10 px-4 rounded-t-md bg-white/40 hover:bg-slate-200 cursor-pointer'>
+        <button
+          className='h-10 px-4 rounded-t-md bg-white/40 hover:bg-slate-200 cursor-pointer'
+          onClick={handleViewLess}
+        >
           <FontAwesomeIcon icon={faEllipsis} />
         </button>
       );
