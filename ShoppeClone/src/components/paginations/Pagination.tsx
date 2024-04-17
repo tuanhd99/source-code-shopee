@@ -1,17 +1,21 @@
 import { faAngleLeft, faAngleRight, faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import { RouterPath } from "src/router/util";
 import { ProductListConfig } from "src/types/product.type";
 
-interface IPropPagination {
+export interface IPropPagination {
   page_size?: number;
   queryConfig: ProductListConfig;
 }
 function Pagination(prop: IPropPagination) {
   const { queryConfig, page_size } = prop;
   const [currentPage, setCurrentPage] = useState<number>(Number(queryConfig?.page));
+
+  useEffect(() => {
+    setCurrentPage(Number(queryConfig?.page));
+  }, [queryConfig?.page]);
   const navigate = useNavigate();
   const pageNumberLitmit = 5;
   const [maxPageNumberLimit, setMaxPageNumberLimit] = useState<number>(5);
@@ -92,7 +96,7 @@ function Pagination(prop: IPropPagination) {
           if (item < maxPageNumberLimit + 1 && item > minPageNumberLimit) {
             return (
               <button
-                className={`h-10 px-4 rounded-md-sm rounded-br-sm  border border-slate-300 hover:bg-slate-200 ${currentPage === item ? "bg-gray-400" : "bg-white"}  `}
+                className={`h-10 px-4 rounded-md-sm rounded-br-sm  border border-slate-300 hover:bg-slate-200 ${Number(currentPage) === item ? "bg-gray-400" : "bg-white"}  `}
                 key={item}
                 onClick={() => handleClickPage(item)}
               >

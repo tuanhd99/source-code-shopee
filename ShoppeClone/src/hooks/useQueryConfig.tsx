@@ -9,7 +9,6 @@ export type QueryConfig = {
 };
 function useQueryConfig() {
   const queryParams: QueryConfig = useQueyParams();
-  console.log(queryParams);
 
   const queryConfig: QueryConfig = omitBy(
     {
