@@ -6,7 +6,6 @@ import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import Image from "src/assets/Image";
 import { LoginAccount } from "src/auth/authAPI";
 import { ResponseApi } from "src/auth/models";
@@ -47,11 +46,11 @@ function Login() {
         saveToLocalStorage("user", data.data?.user);
         setIsAuthenticated(true);
         navigate(RouterPath.Index);
-        toast.success("Đăng nhập thành công");
       },
       onError(error) {
         if (isAxiosUnprocessableEntity<ResponseApi<IFormInputs>>(error)) {
           const formError = error.response?.data.data;
+          console.log(formError);
           if (formError) {
             Object.keys(formError).forEach((key) => {
               setError(key as keyof IFormInputs, {

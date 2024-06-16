@@ -11,7 +11,7 @@ module.exports = {
       colors: {
         orange: "#ee4d2d"
       },
-      height: {
+      minHeight: {
         "100vh-h-28": "calc(100% - 28rem)"
       }
     }
