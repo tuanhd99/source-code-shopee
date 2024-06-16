@@ -1,7 +1,15 @@
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function ProductRating({ rating }: { rating: number }) {
+function ProductRating({
+  rating,
+  activeClassname = "#ffa727",
+  nonActiveClassname = "#d5d5d5"
+}: {
+  rating: number;
+  activeClassname?: string;
+  nonActiveClassname?: string;
+}) {
   const handleWidth = (order: number) => {
     if (order <= rating) {
       return "100%";
@@ -19,9 +27,9 @@ function ProductRating({ rating }: { rating: number }) {
           return (
             <div className='relative' key={index}>
               <div className='absolute top-0 left-0 h-full overflow-hidden' style={{ width: handleWidth(index + 1) }}>
-                <FontAwesomeIcon icon={faStar} style={{ color: "#ffa727" }} />
+                <FontAwesomeIcon icon={faStar} style={{ color: activeClassname }} />
               </div>
-              <FontAwesomeIcon icon={faStar} color='#d5d5d5' />
+              <FontAwesomeIcon icon={faStar} color={nonActiveClassname} />
             </div>
           );
         })}

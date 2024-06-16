@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import ProductRating from "src/components/ProductRating";
+import { RouterPath } from "src/router/util";
 import { Product as ProductType } from "src/types/product.type";
 import { formatShopeeSalesCount, formattedCurrency } from "src/utils/function";
 
@@ -9,7 +10,7 @@ interface IProps {
 
 function Product({ prod }: IProps) {
   return (
-    <Link>
+    <Link to={`${RouterPath.Index}${prod._id}`}>
       <div className='bg-white shadow rounded-sm hover:translate-y-[-0.0625rem] hover:shadow-md duration-100 transition-transform overflow-hidden'>
         <div className='w-full pt-[100%] relative'>
           <img src={prod.image} alt={prod.name} className='absolute top-0 left-0 w-full h-full object-cover bg-white' />
