@@ -2,7 +2,7 @@ import { faAngleLeft, faAngleRight, faCartShopping, faMinus, faPlus } from "@for
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import DOMPurify from "dompurify";
-import { useEffect, useMemo, useState } from "react";
+import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProductDetail } from "src/apis/productAPI";
 import InputNumber from "src/components/InputNumber";
@@ -19,6 +19,7 @@ function ProductDetail() {
 
   const [currentIndexImage, setCurrentIndexImage] = useState([0, 5]);
   const [activeImg, setActiveImg] = useState("");
+  const imageRef = useRef<HTMLImageElement>(null);
   const product = productDetail?.data?.data;
   const currentImages = useMemo(
     () => (product ? product.images.slice(...currentIndexImage) : []),
@@ -47,6 +48,31 @@ function ProductDetail() {
     }
   };
 
+  const handleZoom = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    const image = imageRef.current as HTMLImageElement;
+    const rect = event.currentTarget.getBoundingClientRect();
+
+    // Cách 1 : Lấy offsetX và offsetY và sử lí bubble event
+    // const { offsetX, offsetY } = event.nativeEvent;
+    // Cách 2 : Bất chấp bubble event
+    const offsetX = event.pageX - (rect.x + window.scrollX);
+    const offsetY = event.pageY - (rect.y + window.scrollY);
+    const { naturalHeight, naturalWidth } = image;
+    const { height, width } = rect;
+    const top = offsetY * (1 - naturalHeight / height);
+    const left = offsetX * (1 - naturalWidth / width);
+
+    image.style.width = naturalWidth + "px";
+    image.style.height = naturalHeight + "px";
+    image.style.maxWidth = "unset";
+    image.style.top = top + "px";
+    image.style.left = left + "px";
+  };
+
+  const handleRemoveZoom = () => {
+    imageRef.current?.removeAttribute("style");
+  };
+
   return (
     <div className='mt-28 bg-gray-200 py-6'>
       {isFetching ? (
@@ -57,11 +83,16 @@ function ProductDetail() {
             <div className='bg-white p-4 shadow'>
               <div className='grid grid-cols-12 gap-9'>
                 <div className='col-span-5'>
-                  <div className='relative w-full pt-[100%] shadow'>
+                  <div
+                    className='relative w-full pt-[100%] shadow overflow-hidden'
+                    onMouseMove={handleZoom}
+                    onMouseLeave={handleRemoveZoom}
+                  >
                     <img
                       src={activeImg}
                       alt={product.name}
-                      className='absolute top-0 left-0 w-full h-full object-cover bg-white'
+                      className='absolute pointer-events-none top-0 left-0 w-full h-full object-cover bg-white cursor-zoom-in'
+                      ref={imageRef}
                     />
                   </div>
                   <div className='relative mt-4 grid grid-cols-5 gap-1'>
