@@ -2,6 +2,7 @@ import { faAngleLeft, faAngleRight, faCartShopping, faMinus, faPlus } from "@for
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import DOMPurify from "dompurify";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProductDetail } from "src/apis/productAPI";
 import InputNumber from "src/components/InputNumber";
@@ -15,8 +16,36 @@ function ProductDetail() {
     queryKey: ["product", id],
     queryFn: () => getProductDetail(id as string)
   });
+
+  const [currentIndexImage, setCurrentIndexImage] = useState([0, 5]);
+  const [activeImg, setActiveImg] = useState("");
   const product = productDetail?.data?.data;
+  const currentImages = useMemo(
+    () => (product ? product.images.slice(...currentIndexImage) : []),
+    [currentIndexImage, product]
+  );
+
+  useEffect(() => {
+    if (product && product.image.length > 0) {
+      setActiveImg(product.images[0]);
+    }
+  }, [product]);
   if (!product) return null;
+
+  const handleHoverImg = (img: string) => {
+    setActiveImg(img);
+  };
+
+  const handleNextImg = () => {
+    if (currentIndexImage[1] < product.images.length) {
+      setCurrentIndexImage((prev) => [prev[0] + 1, prev[1] + 1]);
+    }
+  };
+  const handlePrevImg = () => {
+    if (currentIndexImage[0] > 0) {
+      setCurrentIndexImage((prev) => [prev[0] - 1, prev[1] - 1]);
+    }
+  };
 
   return (
     <div className='mt-28 bg-gray-200 py-6'>
@@ -24,25 +53,25 @@ function ProductDetail() {
         <LoadingArea />
       ) : (
         <>
-          <div className='bg-white p-4 shadow'>
-            <div className='container'>
+          <div className='container'>
+            <div className='bg-white p-4 shadow'>
               <div className='grid grid-cols-12 gap-9'>
                 <div className='col-span-5'>
                   <div className='relative w-full pt-[100%] shadow'>
                     <img
-                      src={product.image}
+                      src={activeImg}
                       alt={product.name}
                       className='absolute top-0 left-0 w-full h-full object-cover bg-white'
                     />
                   </div>
                   <div className='relative mt-4 grid grid-cols-5 gap-1'>
                     <button className='px-2 absolute left-0 top-1/2 z-10 h-10 -translate-y-1/2 bg-black/20 text-white'>
-                      <FontAwesomeIcon icon={faAngleLeft} />
+                      <FontAwesomeIcon icon={faAngleLeft} onClick={handlePrevImg} />
                     </button>
-                    {product.images.slice(0, 4).map((item, index) => {
-                      const isActive = index === 0;
+                    {currentImages.map((item) => {
+                      const isActive = item === activeImg;
                       return (
-                        <div className='relative w-full pt-[100%]' key={item}>
+                        <div className='relative w-full pt-[100%]' key={item} onMouseEnter={() => handleHoverImg(item)}>
                           <img
                             src={item}
                             alt={product.name}
@@ -53,7 +82,7 @@ function ProductDetail() {
                       );
                     })}
                     <button className='px-2 absolute right-0 top-1/2 z-10 h-10 -translate-y-1/2 bg-black/20 text-white'>
-                      <FontAwesomeIcon icon={faAngleRight} />
+                      <FontAwesomeIcon icon={faAngleRight} onClick={handleNextImg} />
                     </button>
                   </div>
                 </div>
@@ -109,8 +138,8 @@ function ProductDetail() {
               </div>
             </div>
           </div>
-          <div className='mt-8 bg-white p-4 shadow'>
-            <div className='container'>
+          <div className='container'>
+            <div className='mt-8 bg-white p-4 shadow'>
               <div className='rounded bg-gray-50 p-4 text-lg capitalize text-slate-700'>Mô tả sản phẩm</div>
               <div className='mx-4 mt-12 mb-4 text-sm leading-loose'>
                 <div
