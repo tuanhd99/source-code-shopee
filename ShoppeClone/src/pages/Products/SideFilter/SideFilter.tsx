@@ -1,6 +1,7 @@
 import { faBars, faCaretRight, faFilter, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
+import { omit } from "lodash";
 import { Controller, useForm } from "react-hook-form";
 import { Link, createSearchParams, useNavigate } from "react-router-dom";
 import InputNumber from "src/components/InputNumber";
@@ -33,7 +34,15 @@ function SideFilter(props: IPropCategory) {
   });
 
   const handleOnClick = (id: string) => {
-    const newQueryParams = { ...queryConfig, category: id };
+    const newQueryParams = queryConfig.name
+      ? omit(
+          {
+            ...queryConfig,
+            category: id
+          },
+          ["name"]
+        )
+      : { ...queryConfig, category: id };
     const searchParams = new URLSearchParams(newQueryParams as any);
     navigate({
       pathname: RouterPath.Index,

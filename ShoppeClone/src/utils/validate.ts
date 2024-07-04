@@ -64,11 +64,15 @@ export const schema = yup.object({
     .string()
     .required("Xác nhận mật khẩu không được để trống.")
     .matches(/^[a-zA-Z0-9!@#$%^&*]{6,160}$/, "Vui lòng nhập mật khẩu hợp lệ.")
-    .oneOf([yup.ref("password")], "Xác nhận Email không khớp.")
+    .oneOf([yup.ref("password")], "Xác nhận Email không khớp."),
+  name: yup.string().trim().required("Tên sản phẩm không được để trống.")
 });
 
 export const schemaLogin = schema.omit(["confirm_password"]);
 export type SchemaLogin = yup.InferType<typeof schemaLogin>;
+
+export const schemaSearchName = schema.pick(["name"]);
+export type SchemaSearchName = yup.InferType<typeof schemaSearchName>;
 
 export type Schema = yup.InferType<typeof schema>;
 

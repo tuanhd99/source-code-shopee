@@ -1,23 +1,36 @@
 import { faCartShopping, faChevronDown, faGlobe, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
+import { omit } from "lodash";
 import { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, createSearchParams, useNavigate } from "react-router-dom";
 import Image from "src/assets/Image";
 import { LogoutAccount } from "src/auth/authAPI";
 import { User } from "src/auth/models";
 import Popver from "src/components/Popver";
 import LoadingContainer from "src/components/loading/LoadingContainer";
 import { AppContext } from "src/contexts/App.Context";
+import useQueryConfig from "src/hooks/useQueryConfig";
 import i18n from "src/i18n/i18n";
 import { RouterPath } from "src/router/util";
 import { getFromLocalStorage, removeKeyLocalStorage, saveToLocalStorage } from "src/utils/function";
+import { SchemaSearchName, schemaSearchName } from "src/utils/validate";
 
 function MainHeader() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AppContext);
   const userInfo: User = getFromLocalStorage("user");
   const [language, setLanguage] = useState<string>(getFromLocalStorage("language"));
+  const queryConfig = useQueryConfig();
+  const navigate = useNavigate();
+  const { handleSubmit, register } = useForm<SchemaSearchName>({
+    defaultValues: {
+      name: ""
+    },
+    resolver: yupResolver(schemaSearchName)
+  });
 
   const { t } = useTranslation();
   const logOutMutation = useMutation({
@@ -38,6 +51,24 @@ function MainHeader() {
     setLanguage(lg);
     saveToLocalStorage("language", lg);
   };
+
+  const onSubmitSearch = handleSubmit((data) => {
+    const queryParams = queryConfig.queryConfig.order
+      ? omit(
+          {
+            ...queryConfig.queryConfig,
+            name: data.name
+          },
+          ["order", "sort_by"]
+        )
+      : { ...queryConfig.queryConfig, name: data.name };
+    const newQueryParams = { ...queryParams };
+    const searchParams = new URLSearchParams(newQueryParams as any);
+    navigate({
+      pathname: RouterPath.Index,
+      search: `?${createSearchParams(searchParams).toString()}`
+    });
+  });
   return (
     <div className='pb-5 pt-2 bg-gradient-to-b from-[#f53d2d] to-[#f63] text-white fixed top-0 left-0 w-full h-28 z-10'>
       {logOutMutation.isPending ? <LoadingContainer /> : ""}
@@ -127,13 +158,13 @@ function MainHeader() {
               </g>
             </svg>
           </Link>
-          <form className='col-span-9'>
+          <form className='col-span-9' onSubmit={onSubmitSearch}>
             <div className='bg-white rounded-sm p-1 flex'>
               <input
                 type='text'
-                name='Search'
                 className=' text-black px-3 py-2 flex-grow border-none outline-none bg-transparent'
                 placeholder='Shopee bao ship 0 đồng - Đăng kí ngay!'
+                {...register("name")}
               />
               <button className='rounded-sm py-2 px-6 flex-shrink-0 bg-orange hover:opacity-90'>
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
