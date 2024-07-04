@@ -4,11 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import DOMPurify from "dompurify";
 import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProductDetail } from "src/apis/productAPI";
+import { getProductDetail, getProducts } from "src/apis/productAPI";
 import InputNumber from "src/components/InputNumber";
 import ProductRating from "src/components/ProductRating";
 import LoadingArea from "src/components/loading/LoadingArea";
 import { formatShopeeSalesCount, formattedCurrency, getIDFromNameId, rateSale } from "src/utils/function";
+import Product from "../Products/Product";
 
 function ProductDetail() {
   const { nameId } = useParams();
@@ -26,6 +27,14 @@ function ProductDetail() {
     () => (product ? product.images.slice(...currentIndexImage) : []),
     [currentIndexImage, product]
   );
+  const queryConfig = { limit: "20", page: "1", category: product?.category._id };
+
+  const { data: productSameData } = useQuery({
+    queryKey: ["products", queryConfig],
+    queryFn: () => getProducts(queryConfig),
+    staleTime: 3 * 60 * 1000,
+    enabled: Boolean(product)
+  });
 
   useEffect(() => {
     if (product && product.image.length > 0) {
@@ -179,6 +188,20 @@ function ProductDetail() {
                     __html: DOMPurify.sanitize(product.description)
                   }}
                 ></div>
+              </div>
+            </div>
+          </div>
+          <div className='mt-8 bg-white p-4 shadow'>
+            <div className='container'>
+              <div className='uppercase text-gray-400'>Có thể bạn cũng thích</div>
+              <div className='mt-6 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3'>
+                {productSameData?.data?.data?.products?.map((prod) => {
+                  return (
+                    <div className='col-span-1' key={prod._id}>
+                      <Product prod={prod} />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

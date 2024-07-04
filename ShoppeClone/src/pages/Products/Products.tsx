@@ -15,7 +15,8 @@ export default function Products() {
     queryKey: ["products", queryConfig],
     queryFn: () => {
       return getProducts(queryConfig as ProductListConfig);
-    }
+    },
+    staleTime: 3 * 60 * 1000
   });
 
   const { data: categoryData } = useQuery({
