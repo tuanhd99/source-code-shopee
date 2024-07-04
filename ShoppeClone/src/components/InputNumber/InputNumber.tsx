@@ -1,6 +1,6 @@
 import { ChangeEvent, InputHTMLAttributes, useState } from "react";
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string;
   classNameInput?: string;
   classNameError?: string;
@@ -14,7 +14,7 @@ function InputNumber({
   className,
   value,
   ...rest
-}: Props) {
+}: InputNumberProps) {
   const [localValue, setLocalValue] = useState<string>(value as string);
   const handleOnchange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;

@@ -1,12 +1,12 @@
-import { faAngleLeft, faAngleRight, faCartShopping, faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight, faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import DOMPurify from "dompurify";
 import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProductDetail, getProducts } from "src/apis/productAPI";
-import InputNumber from "src/components/InputNumber";
 import ProductRating from "src/components/ProductRating";
+import QuantityController from "src/components/QuantityController/QuantityController";
 import LoadingArea from "src/components/loading/LoadingArea";
 import { formatShopeeSalesCount, formattedCurrency, getIDFromNameId, rateSale } from "src/utils/function";
 import Product from "../Products/Product";
@@ -21,6 +21,7 @@ function ProductDetail() {
 
   const [currentIndexImage, setCurrentIndexImage] = useState([0, 5]);
   const [activeImg, setActiveImg] = useState("");
+  const [buyCount, setBuyCount] = useState<number>(1);
   const imageRef = useRef<HTMLImageElement>(null);
   const product = productDetail?.data?.data;
   const currentImages = useMemo(
@@ -83,6 +84,10 @@ function ProductDetail() {
     imageRef.current?.removeAttribute("style");
   };
 
+  const handleOnChangeBuyCount = (value: number) => {
+    setBuyCount(value);
+  };
+
   return (
     <div className='mt-28 bg-gray-200 py-6'>
       {isFetching ? (
@@ -122,7 +127,7 @@ function ProductDetail() {
                         </div>
                       );
                     })}
-                    <button className='px-2 absolute right-0 top-1/2 z-10 h-10 -translate-y-1/2 bg-black/20 text-white'>
+                    <button className='px-2 absolute right-0 top-1/2 z-0 h-10 -translate-y-1/2 bg-black/20 text-white'>
                       <FontAwesomeIcon icon={faAngleRight} onClick={handleNextImg} />
                     </button>
                   </div>
@@ -151,19 +156,13 @@ function ProductDetail() {
                   </div>
                   <div className='mt-8 flex items-center '>
                     <div className='capitalize text-gray-500'>số lượng</div>
-                    <div className='ml-10 flex items-center'>
-                      <button className='flex h-8 items-center justify-center rounded-l-sm border border-gray-300 tex-fray-600 px-2'>
-                        <FontAwesomeIcon icon={faMinus} />
-                      </button>
-                      <InputNumber
-                        value={1}
-                        classNameError='hidden'
-                        classNameInput='h-8 w-14 border-t border-b border-gray-300 outline-none text-center p-1'
-                      />
-                      <button className='flex h-8 items-center justify-center rounded-l-sm border border-gray-300 tex-fray-600 px-2'>
-                        <FontAwesomeIcon icon={faPlus} />
-                      </button>
-                    </div>
+                    <QuantityController
+                      max={product.quantity}
+                      onIncrease={handleOnChangeBuyCount}
+                      onDecrease={handleOnChangeBuyCount}
+                      onType={handleOnChangeBuyCount}
+                      value={buyCount}
+                    />
                     <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
                   </div>
                   <div className='mt-8 flex items-center gap-4'>
@@ -191,8 +190,8 @@ function ProductDetail() {
               </div>
             </div>
           </div>
-          <div className='mt-8 bg-white p-4 shadow'>
-            <div className='container'>
+          <div className='container'>
+            <div className='mt-8 bg-white p-4 shadow'>
               <div className='uppercase text-gray-400'>Có thể bạn cũng thích</div>
               <div className='mt-6 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3'>
                 {productSameData?.data?.data?.products?.map((prod) => {
