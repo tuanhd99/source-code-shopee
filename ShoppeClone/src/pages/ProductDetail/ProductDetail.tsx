@@ -111,7 +111,7 @@ function ProductDetail() {
                     />
                   </div>
                   <div className='relative mt-4 grid grid-cols-5 gap-1'>
-                    <button className='px-2 absolute left-0 top-1/2 z-10 h-10 -translate-y-1/2 bg-black/20 text-white'>
+                    <button className='px-2 absolute left-0 top-1/2 z-0 h-10 -translate-y-1/2 bg-black/20 text-white'>
                       <FontAwesomeIcon icon={faAngleLeft} onClick={handlePrevImg} />
                     </button>
                     {currentImages.map((item) => {

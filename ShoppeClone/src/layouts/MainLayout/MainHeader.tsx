@@ -70,7 +70,7 @@ function MainHeader() {
     });
   });
   return (
-    <div className='pb-5 pt-2 bg-gradient-to-b from-[#f53d2d] to-[#f63] text-white fixed top-0 left-0 w-full h-28 z-20'>
+    <div className='pb-5 pt-2 bg-gradient-to-b from-[#f53d2d] to-[#f63] text-white fixed top-0 left-0 w-full h-28 z-10'>
       {logOutMutation.isPending ? <LoadingContainer /> : ""}
       <div className='container mx-10 '>
         <div className='flex items-center justify-between '>
