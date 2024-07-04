@@ -8,10 +8,11 @@ import { getProductDetail } from "src/apis/productAPI";
 import InputNumber from "src/components/InputNumber";
 import ProductRating from "src/components/ProductRating";
 import LoadingArea from "src/components/loading/LoadingArea";
-import { formatShopeeSalesCount, formattedCurrency, rateSale } from "src/utils/function";
+import { formatShopeeSalesCount, formattedCurrency, getIDFromNameId, rateSale } from "src/utils/function";
 
 function ProductDetail() {
-  const { id } = useParams();
+  const { nameId } = useParams();
+  const id = getIDFromNameId(nameId as string);
   const { data: productDetail, isFetching } = useQuery({
     queryKey: ["product", id],
     queryFn: () => getProductDetail(id as string)

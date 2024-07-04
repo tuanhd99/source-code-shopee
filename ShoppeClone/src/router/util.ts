@@ -4,5 +4,5 @@ export enum RouterPath {
   Login = "/login",
   Register = "/register",
   Profile = "/profile",
-  ProductDetail = `:id`
+  ProductDetail = `:nameId`
 }
