@@ -1,15 +1,19 @@
 import { faAngleLeft, faAngleRight, faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import DOMPurify from "dompurify";
 import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProductDetail, getProducts } from "src/apis/productAPI";
+import { addToCart } from "src/apis/purchaseAPI";
 import ProductRating from "src/components/ProductRating";
 import QuantityController from "src/components/QuantityController/QuantityController";
 import LoadingArea from "src/components/loading/LoadingArea";
+import { queryClient } from "src/main";
+import { StatusOrder } from "src/utils/constants";
 import { formatShopeeSalesCount, formattedCurrency, getIDFromNameId, rateSale } from "src/utils/function";
 import Product from "../Products/Product";
+import { toast } from "react-toastify";
 
 function ProductDetail() {
   const { nameId } = useParams();
@@ -18,7 +22,9 @@ function ProductDetail() {
     queryKey: ["product", id],
     queryFn: () => getProductDetail(id as string)
   });
-
+  const addToCartMutation = useMutation({
+    mutationFn: (body: { product_id: string; buy_count: number }) => addToCart(body)
+  });
   const [currentIndexImage, setCurrentIndexImage] = useState([0, 5]);
   const [activeImg, setActiveImg] = useState("");
   const [buyCount, setBuyCount] = useState<number>(1);
@@ -86,6 +92,20 @@ function ProductDetail() {
 
   const handleOnChangeBuyCount = (value: number) => {
     setBuyCount(value);
+  };
+
+  const handleAddToCart = () => {
+    addToCartMutation.mutate(
+      { buy_count: buyCount, product_id: product._id as string },
+      {
+        onSuccess: () => {
+          toast.success("Thêm sản phầm vào giỏ hàng thành công.");
+          queryClient.invalidateQueries({
+            queryKey: ["purchases", { status: StatusOrder.InCart }]
+          });
+        }
+      }
+    );
   };
 
   return (
@@ -166,7 +186,10 @@ function ProductDetail() {
                     <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
                   </div>
                   <div className='mt-8 flex items-center gap-4'>
-                    <button className='flex h-12 items-center gap-2 justify-center rounded-sm border text-orange border-orange bg-orange/10 px-5 capitalize shadow-sm hover:bg-orange/5'>
+                    <button
+                      className='flex h-12 items-center gap-2 justify-center rounded-sm border text-orange border-orange bg-orange/10 px-5 capitalize shadow-sm hover:bg-orange/5'
+                      onClick={handleAddToCart}
+                    >
                       <FontAwesomeIcon icon={faCartShopping} />
                       Thêm vào giỏ hàng
                     </button>

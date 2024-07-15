@@ -13,7 +13,7 @@ import AppProvide from "./contexts/App.Context.tsx";
 import "./i18n/i18n.ts";
 config.autoAddCss = false;
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false
@@ -29,7 +29,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </AppProvide>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-      <ToastContainer position='top-right' autoClose={5000} theme='light' hideProgressBar closeOnClick={false} />
+      <ToastContainer position='top-right' autoClose={3000} theme='light' hideProgressBar closeOnClick={false} />
     </BrowserRouter>
   </React.StrictMode>
 );

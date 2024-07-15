@@ -63,3 +63,12 @@ export enum HttpStatusCode {
   NotExtended = 510,
   NetworkAuthenticationRequired = 511
 }
+export enum StatusOrder {
+  InCart = -1,
+  All = 0,
+  Pending = 1,
+  Confirming = 2,
+  Transporting = 3,
+  Deliered = 4,
+  Cancel = 5
+}

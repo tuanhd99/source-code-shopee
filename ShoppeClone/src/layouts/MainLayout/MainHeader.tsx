@@ -1,12 +1,13 @@
 import { faCartShopping, faChevronDown, faGlobe, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { omit } from "lodash";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, createSearchParams, useNavigate } from "react-router-dom";
+import { getPurchases } from "src/apis/purchaseAPI";
 import Image from "src/assets/Image";
 import { LogoutAccount } from "src/auth/authAPI";
 import { User } from "src/auth/models";
@@ -16,11 +17,13 @@ import { AppContext } from "src/contexts/App.Context";
 import useQueryConfig from "src/hooks/useQueryConfig";
 import i18n from "src/i18n/i18n";
 import { RouterPath } from "src/router/util";
-import { getFromLocalStorage, removeKeyLocalStorage, saveToLocalStorage } from "src/utils/function";
+import { StatusOrder } from "src/utils/constants";
+import { formattedCurrency, getFromLocalStorage, removeKeyLocalStorage, saveToLocalStorage } from "src/utils/function";
 import { SchemaSearchName, schemaSearchName } from "src/utils/validate";
 
 function MainHeader() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AppContext);
+  const MAX_PURCHASES = 5;
   const userInfo: User = getFromLocalStorage("user");
   const [language, setLanguage] = useState<string>(getFromLocalStorage("language"));
   const queryConfig = useQueryConfig();
@@ -31,6 +34,15 @@ function MainHeader() {
     },
     resolver: yupResolver(schemaSearchName)
   });
+  // Khi chúng ta chuyển trang Header chỉ bị re-render
+  // Chứ không bị unmount - mounting again
+  // Nên các query này sẽ không bị inactive => Không bị gọi lại => Không cần thiết stale : Infinity
+  const { data: purchasesInCartData } = useQuery({
+    queryKey: ["purchases", { status: StatusOrder.InCart }],
+    queryFn: () => getPurchases({ status: StatusOrder.InCart })
+  });
+
+  const purchasesIncart = purchasesInCartData?.data.data;
 
   const { t } = useTranslation();
   const logOutMutation = useMutation({
@@ -176,49 +188,57 @@ function MainHeader() {
               renderPopover={
                 <div className='bg-white relative shadow-md rounded-sm border-gray-200 text-sm max-w-[500px]'>
                   <div className='p-2'>
-                    <div className='text-gray-400 capitalize'>Sản phẩm mới thêm</div>
-                    <div className='mt-5'>
-                      <div className='mt-4 flex'>
-                        <div className='flex w-full items-center'>
-                          <img src={Image.Avatar} alt='img' className='w-11 h-11 object-cover' />
-                          <div className='flex-grow ml-2 overflow-hidden'>
-                            <div className='truncate'>
-                              Bộ nồi Inoc 3 đáy sunnhouse sh334 16,20,24 cm, Bộ nồi Inoc 3 đáy sunnhouse sh334 16,20,24
-                              cm
-                            </div>
-                          </div>
-                          <div className='ml-2 flex-shrink-0'>
-                            <span className='text-orange'>đ649.000</span>
-                          </div>
+                    {purchasesIncart ? (
+                      <>
+                        <div className='text-gray-400 capitalize'>Sản phẩm mới thêm</div>
+                        <div className='mt-5'>
+                          {purchasesIncart?.slice(0, MAX_PURCHASES).map((item) => {
+                            return (
+                              <div className='mt-4 flex hover:bg-gray-100' key={item._id}>
+                                <div className='flex w-full items-center'>
+                                  <img
+                                    src={item.product.image}
+                                    alt={item.product.image}
+                                    className='w-11 h-11 object-cover'
+                                  />
+                                  <div className='flex-grow ml-2 overflow-hidden'>
+                                    <div className='truncate'>{item.product.name}</div>
+                                  </div>
+                                  <div className='ml-2 flex-shrink-0'>
+                                    <span className='text-orange'>{formattedCurrency(item.product.price)}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
-                      </div>
-                      <div className='mt-4 flex'>
-                        <div className='flex w-full items-center'>
-                          <img src={Image.Avatar} alt='img' className='w-11 h-11 object-cover' />
-                          <div className='flex-grow ml-2 overflow-hidden'>
-                            <div className='truncate'>
-                              Bộ nồi Inoc 3 đáy sunnhouse sh334 16,20,24 cm, Bộ nồi Inoc 3 đáy sunnhouse sh334 16,20,24
-                              cm
-                            </div>
+                        <div className='flex mt-6 items-center justify-between'>
+                          <div className='capitalize text-sx text-gray-500'>
+                            {purchasesIncart && purchasesIncart?.length > MAX_PURCHASES
+                              ? purchasesIncart?.length - MAX_PURCHASES
+                              : purchasesIncart?.length}
+                            Thêm vào giỏ hàng
                           </div>
-                          <div className='ml-2 flex-shrink-0'>
-                            <span className='text-orange'>đ649.000</span>
-                          </div>
+                          <button className='capitalize px-4 py-2 rounded-sm bg-orange hover:bg-opacity-90 text-white'>
+                            Xem giỏ hàng
+                          </button>
                         </div>
+                      </>
+                    ) : (
+                      <div className='flex items-center justify-center flex-col gap-4 p-3'>
+                        <img src={Image.NoItem} alt='no-item' className='w-20 h-20 object-cover' />
+                        <div className=''>Chưa có sản phẩm</div>
                       </div>
-                    </div>
-                    <div className='flex mt-6 items-center justify-between'>
-                      <div className='capitalize text-sx text-gray-500'>1 Thêm vào giỏ hàng</div>
-                      <button className='capitalize px-4 py-2 rounded-sm bg-orange hover:bg-opacity-90 text-white'>
-                        Xem giỏ hàng
-                      </button>
-                    </div>
+                    )}
                   </div>
                 </div>
               }
             >
-              <Link>
+              <Link className='relative'>
                 <FontAwesomeIcon icon={faCartShopping} fontSize={20} />
+                <span className='absolute top-[-13px] left-[-10px] rounded-full px-[5px] bg-white text-orange '>
+                  {purchasesIncart?.length}
+                </span>
               </Link>
             </Popver>
           </div>

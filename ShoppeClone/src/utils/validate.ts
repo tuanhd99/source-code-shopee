@@ -68,7 +68,7 @@ export const schema = yup.object({
   name: yup.string().trim().required("Tên sản phẩm không được để trống.")
 });
 
-export const schemaLogin = schema.omit(["confirm_password"]);
+export const schemaLogin = schema.omit(["confirm_password", "name"]);
 export type SchemaLogin = yup.InferType<typeof schemaLogin>;
 
 export const schemaSearchName = schema.pick(["name"]);
