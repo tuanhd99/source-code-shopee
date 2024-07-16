@@ -219,9 +219,12 @@ function MainHeader() {
                               : purchasesIncart?.length}
                             Thêm vào giỏ hàng
                           </div>
-                          <button className='capitalize px-4 py-2 rounded-sm bg-orange hover:bg-opacity-90 text-white'>
+                          <Link
+                            to={RouterPath.Cart}
+                            className='capitalize px-4 py-2 rounded-sm bg-orange hover:bg-opacity-90 text-white'
+                          >
                             Xem giỏ hàng
-                          </button>
+                          </Link>
                         </div>
                       </>
                     ) : (

@@ -12,6 +12,7 @@ const Register = React.lazy(() => import("src/pages/Register"));
 const ProductList = React.lazy(() => import("src/pages/Products"));
 const Profile = React.lazy(() => import("src/pages/Profile"));
 const ProductDetail = React.lazy(() => import("src/pages/ProductDetail"));
+const Cart = React.lazy(() => import("src/pages/Cart"));
 
 export default function useRounterElement() {
   const routerElement = useRoutes([
@@ -43,6 +44,16 @@ export default function useRounterElement() {
             <Suspense fallback={<LoadingArea />}>
               <ProtectedRoute>
                 <ProductDetail />
+              </ProtectedRoute>
+            </Suspense>
+          )
+        },
+        {
+          path: RouterPath.Cart,
+          element: (
+            <Suspense fallback={<LoadingArea />}>
+              <ProtectedRoute>
+                <Cart />
               </ProtectedRoute>
             </Suspense>
           )

@@ -14,3 +14,8 @@ export interface IPurChases {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IBuyProduct {
+  product_id: string;
+  buy_count: number;
+}
