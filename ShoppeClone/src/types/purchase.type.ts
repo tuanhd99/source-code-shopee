@@ -5,7 +5,7 @@ export type PurchasesListStatus = PurchasesStatus | 0;
 
 export interface IPurChases {
   _id: string;
-  buy_count: string;
+  buy_count: number;
   price: string;
   price_before_discount: string;
   status: number;
