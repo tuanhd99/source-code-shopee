@@ -8,12 +8,22 @@ interface Props extends InputNumberProps {
   max?: number;
   onIncrease?: (value: number) => void;
   onDecrease?: (value: number) => void;
+  onFocusOut?: (value: number) => void;
   onType?: (value: number) => void;
   classNameWrapper?: string;
 }
 
 function QuantityController(props: Props) {
-  const { max, onIncrease, onDecrease, onType, classNameWrapper = " ml-10", value, ...rest } = props;
+  const {
+    max,
+    onIncrease,
+    onDecrease,
+    onFocusOut: OnFocusOut,
+    onType,
+    classNameWrapper = " ml-10",
+    value,
+    ...rest
+  } = props;
   const [localValue, setLocalValue] = useState<number>((value as number) || 0);
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +53,10 @@ function QuantityController(props: Props) {
     onDecrease && onDecrease(_value);
     setLocalValue(_value);
   };
+
+  const handelBlur = (e: React.FocusEvent<HTMLInputElement, Element>) => {
+    OnFocusOut && OnFocusOut(Number(e.target.value));
+  };
   return (
     <div className={"flex items-center" + classNameWrapper}>
       <button
@@ -56,6 +70,7 @@ function QuantityController(props: Props) {
         classNameError='hidden'
         classNameInput='h-8 w-14 border-t border-b border-gray-300 outline-none text-center p-1'
         onChange={handleOnChange}
+        onBlur={handelBlur}
         {...rest}
       />
       <button

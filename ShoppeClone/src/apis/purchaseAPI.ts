@@ -13,15 +13,15 @@ export const getPurchases = (params: { status: PurchasesListStatus }) => {
 };
 
 export const buyProduct = (body: IBuyProduct[]) => {
-  return fetHandler.post<SuccessResponse<IPurChases[]>>("purchase/buy-products", body);
+  return fetHandler.post<SuccessResponse<IPurChases[]>>("purchases/buy-products", body);
 };
 
 export const updateProduct = (body: IBuyProduct) => {
-  return fetHandler.put<SuccessResponse<IPurChases>>("purchase/update-purchase", body);
+  return fetHandler.put<SuccessResponse<IPurChases>>("purchases/update-purchase", body);
 };
 
 export const deleleProduct = (ids: string[]) => {
-  return fetHandler.delete<SuccessResponse<{ deleted_count: number }>>("purchase", {
+  return fetHandler.delete<SuccessResponse<{ deleted_count: number }>>("purchases", {
     data: ids
   });
 };

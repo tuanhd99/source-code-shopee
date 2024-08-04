@@ -1,37 +1,48 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { getPurchases } from "src/apis/purchaseAPI";
+import { getPurchases, updateProduct } from "src/apis/purchaseAPI";
 import QuantityController from "src/components/QuantityController/QuantityController";
 import { RouterPath } from "src/router/util";
 import { IPurChases } from "src/types/purchase.type";
 import { StatusOrder } from "src/utils/constants";
 import { formattedCurrency, generateNameId } from "src/utils/function";
 import { produce } from "immer";
+import { keyBy } from "lodash";
 
 interface ExtendedPurchase extends IPurChases {
-  disable: boolean;
+  disabled: boolean;
   checked: boolean;
 }
 
 function Cart() {
   const [extendedPurchase, setExtendedPurchase] = useState<ExtendedPurchase[]>([]);
-  const { data: purchasesInCartData } = useQuery({
+  const { data: purchasesInCartData, refetch } = useQuery({
     queryKey: ["purchases", { status: StatusOrder.InCart }],
     queryFn: () => getPurchases({ status: StatusOrder.InCart })
+  });
+
+  const updatePurchase = useMutation({
+    mutationFn: updateProduct,
+    onSuccess: () => {
+      refetch();
+    }
   });
 
   const purchasesIncart = purchasesInCartData?.data.data;
   const isAllChecked = useMemo(() => extendedPurchase.every((purchase) => purchase.checked), [extendedPurchase]);
 
   useEffect(() => {
-    setExtendedPurchase(
-      purchasesIncart?.map((item) => ({
-        ...item,
-        disable: false,
-        checked: false
-      })) || []
-    );
+    setExtendedPurchase((prev) => {
+      const extendedPurchaseOject = keyBy(prev, "_id");
+      return (
+        purchasesIncart?.map((item) => ({
+          ...item,
+          disabled: false,
+          checked: Boolean(extendedPurchaseOject[item._id]?.checked)
+        })) || []
+      );
+    });
   }, [purchasesIncart]);
 
   const handleChecked = (productIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,6 +59,26 @@ function Cart() {
         ...item,
         checked: !isAllChecked
       }))
+    );
+  };
+
+  const handleQuantity = (index: number, value: number, enable: boolean) => {
+    if (enable) {
+      const purchase = extendedPurchase[index];
+      setExtendedPurchase(
+        produce((draft) => {
+          draft[index].disabled = true;
+        })
+      );
+      updatePurchase.mutate({ product_id: purchase.product._id, buy_count: value });
+    }
+  };
+
+  const handleTypeQuantity = (index: number) => (value: number) => {
+    setExtendedPurchase(
+      produce((draft) => {
+        draft[index].buy_count = value;
+      })
     );
   };
 
@@ -131,6 +162,19 @@ function Cart() {
                             max={item.product.quantity}
                             value={item.buy_count}
                             classNameWrapper='flex item-center'
+                            onIncrease={(value) => handleQuantity(index, value, value <= item.product.quantity)}
+                            onDecrease={(value) => handleQuantity(index, value, value >= 1)}
+                            onType={handleTypeQuantity(index)}
+                            onFocusOut={(value) =>
+                              handleQuantity(
+                                index,
+                                value,
+                                value <= item.product.quantity &&
+                                  value >= 1 &&
+                                  value !== (purchasesIncart as IPurChases[])[index].buy_count
+                              )
+                            }
+                            disabled={item.disabled}
                           />
                         </div>
                         <div className='col=span-1'>{formattedCurrency(item.product.price * item.buy_count)}</div>
@@ -147,11 +191,14 @@ function Cart() {
           <div className='sticky bottom-0 z-10 flex item items-center rounded-sm bg-white p-5 shadow border border-gray-100'>
             <div className='flex items-center'>
               <div className='flex flex-shrink-0 items-center justify-center'>
-                <input type='checkbox' className='h-5 w-5 accent-orange' checked={isAllChecked} />
+                <input
+                  type='checkbox'
+                  className='h-5 w-5 accent-orange'
+                  checked={isAllChecked}
+                  onClick={handleCheckAll}
+                />
               </div>
-              <button className='mx-3 border-none bg-none' onClick={handleCheckAll}>
-                Chọn tất cả ({extendedPurchase.length})
-              </button>
+              <button className='mx-3 border-none bg-none'>Chọn tất cả ({extendedPurchase.length})</button>
               <button className='mx-3 border-none bg-none'>Xóa</button>
             </div>
             <div className='flex items-center ml-auto'>
