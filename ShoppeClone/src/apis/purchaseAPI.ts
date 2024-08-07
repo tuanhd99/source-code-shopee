@@ -20,7 +20,7 @@ export const updateProduct = (body: IBuyProduct) => {
   return fetHandler.put<SuccessResponse<IPurChases>>("purchases/update-purchase", body);
 };
 
-export const deleleProduct = (ids: string[]) => {
+export const deleteProduct = (ids: string[]) => {
   return fetHandler.delete<SuccessResponse<{ deleted_count: number }>>("purchases", {
     data: ids
   });
