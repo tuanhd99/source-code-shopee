@@ -6,6 +6,7 @@ import RegisterLayout from "src/layouts/RegisterLayout/RegisterLayout";
 import { RouterPath } from "./util";
 import ProtectedRoute from "./ProtectedRoute";
 import RestricRoute from "./RestricRoute";
+import CartLayout from "src/layouts/CartLayOut/CartLayout";
 
 const Login = React.lazy(() => import("src/pages/Login"));
 const Register = React.lazy(() => import("src/pages/Register"));
@@ -47,9 +48,15 @@ export default function useRounterElement() {
               </ProtectedRoute>
             </Suspense>
           )
-        },
+        }
+      ]
+    },
+    {
+      path: RouterPath.Cart,
+      element: <CartLayout />,
+      children: [
         {
-          path: RouterPath.Cart,
+          index: true,
           element: (
             <Suspense fallback={<LoadingArea />}>
               <ProtectedRoute>
