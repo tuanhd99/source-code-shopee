@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import DOMPurify from "dompurify";
 import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getProductDetail, getProducts } from "src/apis/productAPI";
 import { addToCart } from "src/apis/purchaseAPI";
 import ProductRating from "src/components/ProductRating";
@@ -14,9 +14,11 @@ import { StatusOrder } from "src/utils/constants";
 import { formatShopeeSalesCount, formattedCurrency, getIDFromNameId, rateSale } from "src/utils/function";
 import Product from "../Products/Product";
 import { toast } from "react-toastify";
+import { RouterPath } from "src/router/util";
 
 function ProductDetail() {
   const { nameId } = useParams();
+  const navigate = useNavigate();
   const id = getIDFromNameId(nameId as string);
   const { data: productDetail, isFetching } = useQuery({
     queryKey: ["product", id],
@@ -108,6 +110,16 @@ function ProductDetail() {
     );
   };
 
+  const handleByNow = async () => {
+    const res = await addToCartMutation.mutateAsync({ buy_count: buyCount, product_id: product._id as string });
+    const purchase = res.data.data;
+    navigate(RouterPath.Cart, {
+      state: {
+        purchaseId: purchase._id
+      }
+    });
+  };
+
   return (
     <div className='mt-28 bg-gray-200 py-6'>
       {isFetching ? (
@@ -193,7 +205,10 @@ function ProductDetail() {
                       <FontAwesomeIcon icon={faCartShopping} />
                       Thêm vào giỏ hàng
                     </button>
-                    <button className='flex h-12 items-center gap-2 justify-center rounded-sm border text-white border-orange bg-orange px-5 capitalize shadow-sm hover:bg-orange/90'>
+                    <button
+                      className='flex h-12 items-center gap-2 justify-center rounded-sm border text-white border-orange bg-orange px-5 capitalize shadow-sm hover:bg-orange/90'
+                      onClick={handleByNow}
+                    >
                       Mua ngay
                     </button>
                   </div>

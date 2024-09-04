@@ -1,20 +1,32 @@
 import React, { createContext, useState } from "react";
+import { ExtendedPurchase } from "src/pages/Cart/Cart";
 import { getFromLocalStorage } from "src/utils/function";
 
 interface IAppContext {
   isAuthenticated: boolean;
-  setIsAuthenticated: any;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  // profile: User | null;
+  // setProfile: React.Dispatch<React.SetStateAction<User | null>>;
+  extendedPurchase: ExtendedPurchase[];
+  setExtendedPurchase: React.Dispatch<React.SetStateAction<ExtendedPurchase[]>>;
 }
 const InittialValue: IAppContext = {
   isAuthenticated: Boolean(getFromLocalStorage("access_token")),
-  setIsAuthenticated: () => null
+  setIsAuthenticated: () => null,
+  extendedPurchase: [],
+  setExtendedPurchase: () => null
 };
 export const AppContext = createContext<IAppContext>(InittialValue);
 
 function AppProvide({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(InittialValue.isAuthenticated);
+  const [extendedPurchase, setExtendedPurchase] = useState<ExtendedPurchase[]>(InittialValue.extendedPurchase);
 
-  return <AppContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={{ isAuthenticated, setIsAuthenticated, extendedPurchase, setExtendedPurchase }}>
+      {children}
+    </AppContext.Provider>
+  );
 }
 
 export default AppProvide;

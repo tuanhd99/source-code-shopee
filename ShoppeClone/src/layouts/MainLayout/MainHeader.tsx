@@ -69,9 +69,9 @@ function MainHeader() {
           <div className='col-span-1 justify-self-center'>
             <Popver
               renderPopover={
-                <div className='bg-white relative shadow-md rounded-sm border-gray-200 text-sm max-w-[500px]'>
+                <div className='bg-white relative shadow-md rounded-sm border-gray-200 text-sm max-w-[500px] min-w-[400px]'>
                   <div className='p-2'>
-                    {purchasesIncart ? (
+                    {purchasesIncart && purchasesIncart.length ? (
                       <>
                         <div className='text-gray-400 capitalize'>Sản phẩm mới thêm</div>
                         <div className='mt-5'>
@@ -122,9 +122,11 @@ function MainHeader() {
             >
               <Link className='relative'>
                 <FontAwesomeIcon icon={faCartShopping} fontSize={20} />
-                <span className='absolute top-[-13px] left-[-10px] rounded-full px-[5px] bg-white text-orange '>
-                  {purchasesIncart?.length}
-                </span>
+                {purchasesIncart && purchasesIncart.length && (
+                  <span className='absolute top-[-13px] left-[-10px] rounded-full px-[5px] bg-white text-orange '>
+                    {purchasesIncart?.length}
+                  </span>
+                )}
               </Link>
             </Popver>
           </div>
