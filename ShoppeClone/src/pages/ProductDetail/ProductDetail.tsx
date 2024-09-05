@@ -1,6 +1,6 @@
 import { faAngleLeft, faAngleRight, faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import DOMPurify from "dompurify";
 import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,7 +9,6 @@ import { addToCart } from "src/apis/purchaseAPI";
 import ProductRating from "src/components/ProductRating";
 import QuantityController from "src/components/QuantityController/QuantityController";
 import LoadingArea from "src/components/loading/LoadingArea";
-import { queryClient } from "src/main";
 import { StatusOrder } from "src/utils/constants";
 import { formatShopeeSalesCount, formattedCurrency, getIDFromNameId, rateSale } from "src/utils/function";
 import Product from "../Products/Product";
@@ -19,6 +18,7 @@ import { RouterPath } from "src/router/util";
 function ProductDetail() {
   const { nameId } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const id = getIDFromNameId(nameId as string);
   const { data: productDetail, isFetching } = useQuery({
     queryKey: ["product", id],

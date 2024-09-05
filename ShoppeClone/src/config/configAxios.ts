@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { toast } from "react-toastify";
 import { HttpStatusCode } from "src/utils/constants";
-import { getFromLocalStorage } from "src/utils/function";
+import { getFromLocalStorage, localStorageEventarget, removeKeyLocalStorage } from "src/utils/function";
 
 class fetHandlerAxios {
   instance: AxiosInstance;
@@ -32,6 +32,12 @@ class fetHandlerAxios {
           const data: any | undefined = error.response?.data;
           const message = data.message || error.message;
           toast.error(message);
+        }
+        if (error.response?.status === HttpStatusCode.Unauthorized) {
+          removeKeyLocalStorage("access_token");
+          removeKeyLocalStorage("user");
+          const clearLEvent = new Event("clear");
+          localStorageEventarget.dispatchEvent(clearLEvent);
         }
         return Promise.reject(error);
       }

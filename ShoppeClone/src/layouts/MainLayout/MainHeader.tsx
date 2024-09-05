@@ -1,6 +1,6 @@
 import { faCartShopping, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { getPurchases } from "src/apis/purchaseAPI";
@@ -17,6 +17,8 @@ import { formattedCurrency, removeKeyLocalStorage } from "src/utils/function";
 
 function MainHeader() {
   const { setIsAuthenticated } = useContext(AppContext);
+
+  const queryClient = useQueryClient();
   const MAX_PURCHASES = 5;
   const { onSubmitSearch, register } = useSearchProduct();
 
@@ -37,6 +39,9 @@ function MainHeader() {
       removeKeyLocalStorage("refresh_token");
       removeKeyLocalStorage("access_token");
       removeKeyLocalStorage("user");
+      queryClient.removeQueries({
+        queryKey: ["purchases", { status: StatusOrder.InCart }]
+      });
     }
   });
 
@@ -122,7 +127,7 @@ function MainHeader() {
             >
               <Link className='relative'>
                 <FontAwesomeIcon icon={faCartShopping} fontSize={20} />
-                {purchasesIncart && purchasesIncart.length && (
+                {purchasesIncart && purchasesIncart.length > 0 && (
                   <span className='absolute top-[-13px] left-[-10px] rounded-full px-[5px] bg-white text-orange '>
                     {purchasesIncart?.length}
                   </span>

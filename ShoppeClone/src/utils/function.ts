@@ -45,3 +45,5 @@ export const getIDFromNameId = (nameId: string) => {
   const arr = nameId.split("-i,");
   return arr[arr.length - 1];
 };
+
+export const localStorageEventarget = new EventTarget();
