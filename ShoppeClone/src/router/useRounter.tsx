@@ -7,11 +7,14 @@ import { RouterPath } from "./util";
 import ProtectedRoute from "./ProtectedRoute";
 import RestricRoute from "./RestricRoute";
 import CartLayout from "src/layouts/CartLayOut/CartLayout";
+import LayoutUser from "src/pages/User/LayoutUser/LayoutUser";
 
 const Login = React.lazy(() => import("src/pages/Login"));
 const Register = React.lazy(() => import("src/pages/Register"));
 const ProductList = React.lazy(() => import("src/pages/Products"));
-const Profile = React.lazy(() => import("src/pages/Profile"));
+const Profile = React.lazy(() => import("src/pages/User/Profile"));
+const ChangePassword = React.lazy(() => import("src/pages/User/ChangePassword"));
+const HistoryPurchase = React.lazy(() => import("src/pages/User/History"));
 const ProductDetail = React.lazy(() => import("src/pages/ProductDetail"));
 const Cart = React.lazy(() => import("src/pages/Cart"));
 
@@ -30,14 +33,28 @@ export default function useRounterElement() {
           )
         },
         {
-          path: RouterPath.Profile,
+          path: RouterPath.User,
           element: (
             <Suspense fallback={<LoadingArea />}>
               <ProtectedRoute>
-                <Profile />
+                <LayoutUser />
               </ProtectedRoute>
             </Suspense>
-          )
+          ),
+          children: [
+            {
+              path: RouterPath.Profile,
+              element: <Profile />
+            },
+            {
+              path: RouterPath.ChangePassword,
+              element: <ChangePassword />
+            },
+            {
+              path: RouterPath.historyPurchase,
+              element: <HistoryPurchase />
+            }
+          ]
         },
         {
           path: RouterPath.ProductDetail,
