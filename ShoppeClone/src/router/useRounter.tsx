@@ -51,7 +51,7 @@ export default function useRounterElement() {
               element: <ChangePassword />
             },
             {
-              path: RouterPath.historyPurchase,
+              path: RouterPath.HistoryPurchase,
               element: <HistoryPurchase />
             }
           ]
