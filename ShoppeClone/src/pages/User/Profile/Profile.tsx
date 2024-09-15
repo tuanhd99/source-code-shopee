@@ -1,15 +1,16 @@
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useContext, useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { BodyUpdateProfile, getProfile, updateProfile } from "src/apis/userAPI";
 import Image from "src/assets/Image";
-// import userApi from "src/apis/user.api";
-// import Button from "src/components/Button";
-// import Input from "src/components/Input";
-// import InputFile from "src/components/InputFile";
-// import InputNumber from "src/components/InputNumber";
-// import { AppContext } from "src/contexts/app.context";
-// import { ErrorResponse } from "src/types/utils.type";
-// import { setProfileToLS } from "src/utils/auth";
-// import { userSchema, UserSchema } from "src/utils/rules";
-// import { getAvatarUrl, isAxiosUnprocessableEntityError } from "src/utils/utils";
-// import DateSelect from "../../components/DateSelect";
+import InputNumber from "src/components/InputNumber";
+import { schemaUserProfile, SchemaUserProfile } from "src/utils/validate";
+import DateSelect from "../components/DateSelect";
+import { toast } from "react-toastify";
+import { saveToLocalStorage } from "src/utils/function";
+import LoadingArea from "src/components/loading/LoadingArea";
+import { AppContext } from "src/contexts/App.Context";
 
 // function Info() {
 //   const {
@@ -53,11 +54,10 @@ import Image from "src/assets/Image";
 //   );
 // }
 
-// type FormData = Pick<UserSchema, "name" | "address" | "phone" | "date_of_birth" | "avatar">;
+type FormData = SchemaUserProfile;
 // type FormDataError = Omit<FormData, "date_of_birth"> & {
 //   date_of_birth?: string;
 // };
-// const profileSchema = userSchema.pick(["name", "address", "phone", "date_of_birth", "avatar"]);
 
 // Flow 1:
 // Nhấn upload: upload lên server luôn => server trả về url ảnh
@@ -68,90 +68,74 @@ import Image from "src/assets/Image";
 // Nhấn submit thì tiến hành upload lên server, nếu upload thành công thì tiến hành gọi api updateProfile
 
 export default function Profile() {
-  // const { setProfile } = useContext(AppContext);
+  const { setProfile } = useContext(AppContext);
   // const [file, setFile] = useState<File>();
 
   // const previewImage = useMemo(() => {
   //   return file ? URL.createObjectURL(file) : "";
   // }, [file]);
 
-  // const { data: profileData, refetch } = useQuery({
-  //   queryKey: ["profile"],
-  //   queryFn: userApi.getProfile
-  // });
-  // const profile = profileData?.data.data;
-  // const updateProfileMutation = useMutation(userApi.updateProfile);
-  // const uploadAvatarMutaion = useMutation(userApi.uploadAvatar);
-  // const methods = useForm<FormData>({
-  //   defaultValues: {
-  //     name: "",
-  //     phone: "",
-  //     address: "",
-  //     avatar: "",
-  //     date_of_birth: new Date(1990, 0, 1)
-  //   },
-  //   resolver: yupResolver<FormData>(profileSchema)
-  // });
-  // const {
-  //   register,
-  //   control,
-  //   formState: { errors },
-  //   handleSubmit,
-  //   setValue,
-  //   watch,
-  //   setError
-  // } = methods;
+  const {
+    data: profileData,
+    refetch,
+    isFetching
+  } = useQuery({
+    queryKey: ["profile"],
+    queryFn: getProfile
+  });
 
-  // const avatar = watch("avatar");
+  const UpdateProfileMutation = useMutation({
+    mutationFn: (body: BodyUpdateProfile) => updateProfile(body)
+  });
+  const profile = profileData?.data.data;
+  const methods = useForm<FormData>({
+    defaultValues: {
+      name: "",
+      phone: "",
+      address: "",
+      avatar: "",
+      date_of_birth: new Date(1990, 0, 1)
+    },
+    resolver: yupResolver<FormData>(schemaUserProfile)
+  });
+  const {
+    register,
+    control,
+    formState: { errors },
+    handleSubmit,
+    setValue,
+    watch
+    // setError
+  } = methods;
 
-  // useEffect(() => {
-  //   if (profile) {
-  //     setValue("name", profile.name || "");
-  //     setValue("phone", profile.phone || "");
-  //     setValue("address", profile.address || "");
-  //     setValue("avatar", profile.avatar || "");
-  //     setValue("date_of_birth", profile.date_of_birth ? new Date(profile.date_of_birth) : new Date(1990, 0, 1));
-  //   }
-  // }, [profile, setValue]);
-  // console.log(profile);
-  // const onSubmit = handleSubmit(async (data) => {
-  //   try {
-  //     let avatarName = avatar;
-  //     if (file) {
-  //       const form = new FormData();
-  //       form.append("image", file);
-  //       const uploadRes = await uploadAvatarMutaion.mutateAsync(form);
-  //       avatarName = uploadRes.data.data;
-  //       setValue("avatar", avatarName);
-  //     }
-  //     const res = await updateProfileMutation.mutateAsync({
-  //       ...data,
-  //       date_of_birth: data.date_of_birth?.toISOString(),
-  //       avatar: avatarName
-  //     });
-  //     setProfile(res.data.data);
-  //     setProfileToLS(res.data.data);
-  //     // refetch()
-  //     toast.success(res.data.message);
-  //   } catch (error) {
-  //     if (isAxiosUnprocessableEntityError<ErrorResponse<FormDataError>>(error)) {
-  //       const formError = error.response?.data.data;
-  //       if (formError) {
-  //         Object.keys(formError).forEach((key) => {
-  //           setError(key as keyof FormDataError, {
-  //             message: formError[key as keyof FormDataError],
-  //             type: "Server"
-  //           });
-  //         });
-  //       }
-  //     }
-  //   }
-  // });
+  useEffect(() => {
+    if (profile) {
+      setValue("name", profile.name || "");
+      setValue("phone", profile.phone || "");
+      setValue("address", profile.address || "");
+      setValue("avatar", profile.avatar || "");
+      setValue("date_of_birth", profile.date_of_birth ? new Date(profile.date_of_birth) : new Date(1990, 0, 1));
+    }
+  }, [profile, setValue]);
+  const onSubmit = handleSubmit(async (data) => {
+    const res = await UpdateProfileMutation.mutateAsync({
+      name: data.name ?? "",
+      address: data.address ?? "",
+      phone: data.phone ?? "",
+      date_of_birth: data.date_of_birth?.toISOString()
+    });
+    refetch();
+    saveToLocalStorage("user", res.data?.data);
+    setProfile(res.data.data);
+    toast.success(res.data.message);
+  });
 
   // const handleChangeFile = (file?: File) => {
   //   setFile(file);
   // };
-
+  if (isFetching) {
+    return <LoadingArea />;
+  }
   return (
     <div className='rounded-sm bg-white px-2 pb-10 shadow md:px-7 md:pb-20'>
       <div className='border-b border-b-gray-200 py-6'>
@@ -159,12 +143,12 @@ export default function Profile() {
         <div className='mt-1 text-sm text-gray-700'>Quản lý thông tin hồ sơ để bảo mật tài khoản</div>
       </div>
       {/* <FormProvider {...methods}> */}
-      <form className='mt-8 flex flex-col-reverse md:flex-row md:items-start'>
+      <form className='mt-8 flex flex-col-reverse md:flex-row md:items-start' onSubmit={onSubmit}>
         <div className='mt-6 flex-grow md:mt-0 md:pr-12'>
           <div className='flex flex-col flex-wrap sm:flex-row'>
             <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Email</div>
             <div className='sm:w-[80%] sm:pl-5'>
-              <div className='pt-3 text-gray-700'>Kane.Do@avepoint.com</div>
+              <div className='pt-3 text-gray-700'>{profile?.email}</div>
             </div>
           </div>
           <div className='mt-6 flex flex-col flex-wrap sm:flex-row'>
@@ -172,18 +156,35 @@ export default function Profile() {
             <div className='sm:w-[80%] sm:pl-5'>
               <input
                 className='w-full rounded-sm border border-gray-300 px-3 py-2 outline-none focus:border-gray-500 focus:shadow-sm'
-                name='Tên'
                 placeholder='Tên'
+                autoComplete='on'
+                {...register("name")}
+                value={watch("name")}
               />
+              <div className='mt-1 text-red-600 min-h-[1.25rem] text-sm'>{errors.name?.message}</div>
             </div>
           </div>
-          <div className='mt-6 flex flex-col flex-wrap sm:flex-row'>
+          <div className='mt-4 flex flex-col flex-wrap sm:flex-row'>
             <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Số Điện Thoại</div>
             <div className='sm:w-[80%] sm:pl-5'>
-              <input
-                className='w-full rounded-sm border border-gray-300 px-3 py-2 outline-none focus:border-gray-500 focus:shadow-sm'
-                name='Số điện thoại'
-                placeholder='Số điện thoại'
+              <Controller
+                control={control}
+                name='phone'
+                render={({ field }) => {
+                  return (
+                    <InputNumber
+                      type='text'
+                      className='grow'
+                      classNameInput='w-full rounded-sm border border-gray-300 px-3 py-2 outline-none focus:border-gray-500 focus:shadow-sm'
+                      onChange={(event) => {
+                        field.onChange(event);
+                      }}
+                      placeholder='Số điện thoại'
+                      value={field.value}
+                      errorMessage={errors.phone?.message}
+                    />
+                  );
+                }}
               />
             </div>
           </div>
@@ -193,40 +194,22 @@ export default function Profile() {
             <div className='sm:w-[80%] sm:pl-5'>
               <input
                 className='w-full rounded-sm border border-gray-300 px-3 py-2 outline-none focus:border-gray-500 focus:shadow-sm'
-                name='address'
                 placeholder='Địa chỉ'
-                // errorMessage={errors.address?.message}
+                autoComplete='on'
+                {...register("address")}
+                value={watch("address")}
               />
+              <div className='mt-1 text-red-600 min-h-[1.25rem] text-sm'>{errors.address?.message}</div>
             </div>
           </div>
-          {/* <Controller
-              control={control}
-              name='date_of_birth'
-              render={({ field }) => (
-                <DateSelect
-                  errorMessage={errors.date_of_birth?.message}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            /> */}
-          <div className='mt-6 flex flex-col flex-wrap sm:flex-row'>
-            <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Ngày sinh</div>
-            <div className='sm:w-[80%] sm:pl-5'>
-              <div className='flex justify-between'>
-                <select className='h-10 w-[32%] rounded-sm border border-black/10 px-2'>
-                  <option value=''>Ngày </option>
-                </select>
-                <select className='h-10 w-[32%] rounded-sm border border-black/10 px-2'>
-                  <option value=''>Tháng </option>
-                </select>
-                <select className='h-10 w-[32%] rounded-sm border border-black/10 px-2'>
-                  <option value=''>Năm </option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div className='mt-2 flex flex-col flex-wrap sm:flex-row'>
+          <Controller
+            control={control}
+            name='date_of_birth'
+            render={({ field }) => (
+              <DateSelect errorMessage={errors.date_of_birth?.message} value={field.value} onChange={field.onChange} />
+            )}
+          />
+          <div className='mt-4 flex flex-col flex-wrap sm:flex-row'>
             <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right' />
             <div className='sm:w-[80%] sm:pl-5'>
               <button
@@ -243,7 +226,7 @@ export default function Profile() {
             <div className='my-5 h-24 w-24'>
               <img
                 // src={previewImage || getAvatarUrl(avatar)}
-                src={Image.Avatar}
+                src={profile?.avatar ? profile.avatar : Image.DefaultImage}
                 alt=''
                 className='h-full w-full rounded-full object-cover'
               />

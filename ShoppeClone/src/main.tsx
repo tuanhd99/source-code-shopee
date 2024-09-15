@@ -30,7 +30,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </AppProvide>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-      <ToastContainer position='top-right' autoClose={3000} theme='light' hideProgressBar closeOnClick={false} />
+      <ToastContainer position='top-right' autoClose={3000} theme='light' closeOnClick={false} />
     </BrowserRouter>
   </React.StrictMode>
 );
