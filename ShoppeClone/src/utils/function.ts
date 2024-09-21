@@ -47,3 +47,7 @@ export const getIDFromNameId = (nameId: string) => {
 };
 
 export const localStorageEventarget = new EventTarget();
+
+export const getAvatar = (name: string) => {
+  return `https://api-ecom.duthanhduoc.com/images/${name}`;
+};
