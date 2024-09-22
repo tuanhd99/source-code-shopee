@@ -1,7 +1,7 @@
 import { faBagShopping, faKey, faPen, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Image from "src/assets/Image";
 import { AppContext } from "src/contexts/App.Context";
 import { RouterPath } from "src/router/util";
@@ -28,24 +28,27 @@ function UserSideNav() {
         </div>
       </div>
       <div className='mt-7'>
-        <Link to={RouterPath.Profile} className='flex items-center gap-2 capitalize text-orange transition-colors '>
+        <NavLink
+          to={RouterPath.Profile}
+          className='flex items-center gap-2 capitalize text-orange transition-colors' // Apply this class if isActive is true
+        >
           <FontAwesomeIcon icon={faUser} />
           Tài khoản của tôi
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           to={RouterPath.HistoryPurchase}
           className='flex items-center gap-2 capitalize text-gray-600 transition-colors mt-4 '
         >
           <FontAwesomeIcon icon={faBagShopping} />
           Đơn mua
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           to={RouterPath.ChangePassword}
           className='flex items-center gap-2 capitalize text-gray-600 transition-colors mt-4 '
         >
           <FontAwesomeIcon icon={faKey} />
           Đổi mật khẩu
-        </Link>
+        </NavLink>
       </div>
     </div>
   );

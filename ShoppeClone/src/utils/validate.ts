@@ -47,6 +47,14 @@ export const validateLoginOrRegister = (getValuesInput: UseFormGetValues<any>): 
   }
 });
 
+const handleConfirmPasswordYup = (refString: string) => {
+  return yup
+    .string()
+    .required("Xác nhận mật khẩu không được để trống.")
+    .matches(/^[a-zA-Z0-9!@#$%^&*]{6,160}$/, "Vui lòng nhập mật khẩu hợp lệ.")
+    .oneOf([yup.ref(refString)], "Nhập lại mật khẩu không khớp.");
+};
+
 export const schema = yup.object({
   email: yup
     .string()
@@ -60,11 +68,7 @@ export const schema = yup.object({
     .string()
     .required("Mật khẩu không được để trống.")
     .matches(/^[a-zA-Z0-9!@#$%^&*]{6,160}$/, "Vui lòng nhập mật khẩu hợp lệ."),
-  confirm_password: yup
-    .string()
-    .required("Xác nhận mật khẩu không được để trống.")
-    .matches(/^[a-zA-Z0-9!@#$%^&*]{6,160}$/, "Vui lòng nhập mật khẩu hợp lệ.")
-    .oneOf([yup.ref("password")], "Xác nhận Email không khớp."),
+  confirm_password: handleConfirmPasswordYup("password"),
   name: yup.string().trim().required("Tên sản phẩm không được để trống.")
 });
 
@@ -76,11 +80,14 @@ export const userSchema = yup.object({
   date_of_birth: yup.date().max(new Date(), "Vui lòng chọn 1 ngày trong quá khứ"),
   password: schema.fields["password"],
   new_password: schema.fields["password"],
-  confirm_password: schema.fields["confirm_password"]
+  confirm_password: handleConfirmPasswordYup("new_password")
 });
 export type UserSchema = yup.InferType<typeof userSchema>;
 export const schemaUserProfile = userSchema.omit(["new_password", "password", "confirm_password"]);
 export type SchemaUserProfile = yup.InferType<typeof schemaUserProfile>;
+
+export const schemaPassword = userSchema.pick(["new_password", "password", "confirm_password"]);
+export type SchemaPassword = yup.InferType<typeof schemaPassword>;
 
 export const schemaLogin = schema.omit(["confirm_password", "name"]);
 export type SchemaLogin = yup.InferType<typeof schemaLogin>;
