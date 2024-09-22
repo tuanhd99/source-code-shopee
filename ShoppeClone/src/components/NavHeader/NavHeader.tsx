@@ -74,10 +74,7 @@ function NavHeader() {
             renderPopover={
               <div className='bg-white shadow-md rounded-sm border-gray-200'>
                 <div className='flex flex-col gap-1'>
-                  <Link
-                    to={`${RouterPath.User}/${RouterPath.Profile}`}
-                    className='block py-2 px-3 hover:text-cyan-300 hover:bg-gray-100'
-                  >
+                  <Link to={`${RouterPath.Profile}`} className='block py-2 px-3 hover:text-cyan-300 hover:bg-gray-100'>
                     {t("MyAccount")}
                   </Link>
                   <Link to='/' className='block py-2 px-3 hover:text-cyan-300 hover:bg-gray-100'>

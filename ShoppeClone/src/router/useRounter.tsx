@@ -33,26 +33,38 @@ export default function useRounterElement() {
           )
         },
         {
-          path: RouterPath.User,
-          element: (
-            <Suspense fallback={<LoadingArea />}>
-              <ProtectedRoute>
-                <LayoutUser />
-              </ProtectedRoute>
-            </Suspense>
-          ),
+          element: <LayoutUser />,
           children: [
             {
+              index: true,
               path: RouterPath.Profile,
-              element: <Profile />
+              element: (
+                <Suspense fallback={<LoadingArea />}>
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                </Suspense>
+              )
             },
             {
               path: RouterPath.ChangePassword,
-              element: <ChangePassword />
+              element: (
+                <Suspense fallback={<LoadingArea />}>
+                  <ProtectedRoute>
+                    <ChangePassword />
+                  </ProtectedRoute>
+                </Suspense>
+              )
             },
             {
               path: RouterPath.HistoryPurchase,
-              element: <HistoryPurchase />
+              element: (
+                <Suspense fallback={<LoadingArea />}>
+                  <ProtectedRoute>
+                    <HistoryPurchase />
+                  </ProtectedRoute>
+                </Suspense>
+              )
             }
           ]
         },
