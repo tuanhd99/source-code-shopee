@@ -11,6 +11,7 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import AppProvide from "./contexts/App.Context.tsx";
 import "./i18n/i18n.ts";
+import ErrorBoundary from "./pages/error/Boundary/ErrorBoundary.tsx";
 config.autoAddCss = false;
 
 const queryClient = new QueryClient({
@@ -26,7 +27,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <AppProvide>
-          <App />
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
         </AppProvide>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
