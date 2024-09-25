@@ -8,6 +8,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import RestricRoute from "./RestricRoute";
 import CartLayout from "src/layouts/CartLayOut/CartLayout";
 import LayoutUser from "src/pages/User/LayoutUser/LayoutUser";
+import NotFound from "src/pages/error/NotFound";
 
 const Login = React.lazy(() => import("src/pages/Login"));
 const Register = React.lazy(() => import("src/pages/Register"));
@@ -77,6 +78,10 @@ export default function useRounterElement() {
               </ProtectedRoute>
             </Suspense>
           )
+        },
+        {
+          path: "*",
+          element: <NotFound />
         }
       ]
     },
