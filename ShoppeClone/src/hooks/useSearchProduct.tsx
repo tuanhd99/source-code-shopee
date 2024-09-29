@@ -4,7 +4,7 @@ import useQueryConfig from "./useQueryConfig";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import { RouterPath } from "src/router/util";
-import { omit } from "lodash";
+import omit from "lodash/omit";
 
 function useSearchProduct() {
   const queryConfig = useQueryConfig();

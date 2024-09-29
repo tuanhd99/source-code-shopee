@@ -1,7 +1,7 @@
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
-import { omit } from "lodash";
+import omit from "lodash/omit";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import { IPropPagination } from "src/components/paginations/Pagination";
 import { RouterPath } from "src/router/util";

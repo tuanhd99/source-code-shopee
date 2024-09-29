@@ -1,7 +1,7 @@
 import { faBars, faCaretRight, faFilter, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
-import { omit } from "lodash";
+import omit from "lodash/omit";
 import { Controller, useForm } from "react-hook-form";
 import { Link, createSearchParams, useNavigate } from "react-router-dom";
 import InputNumber from "src/components/InputNumber";
