@@ -44,6 +44,9 @@ function Login() {
         saveToLocalStorage("access_token", data.data?.access_token || "");
         saveToLocalStorage("refresh_token", data.data?.refresh_token || "");
         saveToLocalStorage("user", data.data?.user);
+        // saveToLocalStorage("", data.data?.expires_refresh_token)
+        // saveToLocalStorage("", data.data?.expires)
+        setIsAuthenticated(true);
         setIsAuthenticated(true);
         navigate(RouterPath.Index);
       },

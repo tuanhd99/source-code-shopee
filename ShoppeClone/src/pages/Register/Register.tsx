@@ -14,9 +14,9 @@ import LoadingContainer from "src/components/loading/LoadingContainer";
 import { RouterPath } from "src/router/util";
 import { NameField } from "src/utils/enum";
 import { saveToLocalStorage } from "src/utils/function";
-import { Schema, isAxiosUnprocessableEntity, schema } from "src/utils/validate";
+import { SchemaRegister, isAxiosUnprocessableEntity, schemeRegister } from "src/utils/validate";
 
-type IFormInputs = Schema;
+type IFormInputs = SchemaRegister;
 function Register() {
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState<boolean>(false);
@@ -29,7 +29,7 @@ function Register() {
     watch,
     setError
   } = useForm<IFormInputs>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schemeRegister)
   });
 
   const registerAccountMutation = useMutation({

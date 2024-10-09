@@ -1,3 +1,5 @@
+import { SuccessResponse } from "src/types/utils.type";
+
 type Role = "User" | "Admin";
 export interface User {
   _id: string;
@@ -28,3 +30,4 @@ export type AuthResponse = ResponseApi<{
   expires_refresh_token: number;
   user: User;
 }>;
+export type RefreshTokenResponse = SuccessResponse<{ access_token: string }>;

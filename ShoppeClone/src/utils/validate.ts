@@ -95,7 +95,8 @@ export type SchemaLogin = yup.InferType<typeof schemaLogin>;
 export const schemaSearchName = schema.pick(["name"]);
 export type SchemaSearchName = yup.InferType<typeof schemaSearchName>;
 
-export type Schema = yup.InferType<typeof schema>;
+export const schemeRegister = schema.omit(["name"]);
+export type SchemaRegister = yup.InferType<typeof schemeRegister>;
 
 export const isAxiosError = <T>(error: unknown): error is AxiosError<T> => {
   return axios.isAxiosError(error);
