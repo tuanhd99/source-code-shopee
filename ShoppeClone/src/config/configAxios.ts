@@ -18,7 +18,7 @@ class fetHandlerAxios {
       timeout: 5000,
       headers: {
         "Content-Type": "application/json",
-        "expire-access-token": 6, // 10s
+        "expire-access-token": 60, // 10s
         "expire-refresh-token": 60 * 60 // 1 hour
       }
     });
@@ -55,7 +55,9 @@ class fetHandlerAxios {
             this.refreshTokenRequest = this.refreshTokenRequest
               ? this.refreshTokenRequest
               : this.handleRequestToken().finally(() => {
-                  this.refreshTokenRequest = null;
+                  setTimeout(() => {
+                    this.refreshTokenRequest = null;
+                  }, 10000);
                 });
             return this.refreshTokenRequest.then((access_token) => {
               return this.instance({

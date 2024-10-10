@@ -17,7 +17,7 @@ function NavHeader() {
   const [language, setLanguage] = useState<string>(getFromLocalStorage("language"));
   const { isAuthenticated, setIsAuthenticated } = useContext(AppContext);
   const userInfo: User = getFromLocalStorage("user");
-  const { t } = useTranslation();
+  const { t } = useTranslation("translate");
   const logOutMutation = useMutation({
     mutationFn: LogoutAccount,
     onSuccess: () => {
@@ -77,7 +77,10 @@ function NavHeader() {
                   <Link to={`${RouterPath.Profile}`} className='block py-2 px-3 hover:text-cyan-300 hover:bg-gray-100'>
                     {t("MyAccount")}
                   </Link>
-                  <Link to='/' className='block py-2 px-3 hover:text-cyan-300 hover:bg-gray-100'>
+                  <Link
+                    to={RouterPath.HistoryPurchase}
+                    className='block py-2 px-3 hover:text-cyan-300 hover:bg-gray-100'
+                  >
                     {t("MyOrders")}
                   </Link>
                   <span
